@@ -7,6 +7,8 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -26,7 +28,8 @@ public class Usuario {
     @NotBlank(message = "CPF não pode ser vazio")
     private String cpf;
     private String foto;
-    private List<Amigo> amigos;
-    private List<Notificacoes> notificacoes;
+    private List<Amigo> amigos = new ArrayList<>();
+    private List<Notificacoes> notificacoes = new ArrayList<>();
+    }
 
-}
+

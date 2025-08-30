@@ -1,9 +1,9 @@
 package com.go.go_planner.infrastructure.config;
 
 import com.google.auth.oauth2.GoogleCredentials;
-import com.google.cloud.firestore.Firestore;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
+import com.google.cloud.firestore.Firestore;
 import com.google.firebase.cloud.FirestoreClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,18 +18,16 @@ public class FirebaseConfig {
 
     @Bean
     public FirebaseApp firebaseApp() throws IOException {
-        // 1. Pega a string JSON completa da variável de ambiente que está no seu .env
-        String credentialsJson = System.getenv("FIREBASE_CREDENTIALS_JSON");
+        // A biblioteca spring-dotenv garante que esta chamada encontre a variável no .env
+        String firebaseCredentialsJson = System.getenv("FIREBASE_CREDENTIALS_JSON");
 
-        // 2. Verifica se a variável foi carregada corretamente
-        if (credentialsJson == null || credentialsJson.isEmpty()) {
-            throw new RuntimeException("A variável de ambiente FIREBASE_CREDENTIALS não foi definida ou está vazia.");
+        if (firebaseCredentialsJson == null || firebaseCredentialsJson.isEmpty()) {
+            throw new RuntimeException("A variável de ambiente FIREBASE_CREDENTIALS_JSON não foi definida ou está vazia.");
         }
 
-        // 3. Converte a string de volta para um InputStream que a biblioteca do Google consegue ler
-        InputStream serviceAccount = new ByteArrayInputStream(credentialsJson.getBytes(StandardCharsets.UTF_8));
+        InputStream serviceAccount = new ByteArrayInputStream(firebaseCredentialsJson.getBytes(StandardCharsets.UTF_8));
 
-        FirebaseOptions options = new FirebaseOptions.Builder()
+        FirebaseOptions options = FirebaseOptions.builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                 .build();
 
