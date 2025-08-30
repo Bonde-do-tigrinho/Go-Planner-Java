@@ -2,19 +2,10 @@ package com.go.go_planner.application.port.in;
 
 public interface AceitarAmizadeUseCase {
 
-    void aceitarAmizade(AceitarAmizadeCommand command);
-
-    class AceitarAmizadeCommand {
-        private final String idUsuarioAtual;   // Quem está aceitando
-        private final String idAmigoAprovado;  // O amigo que foi aceito
-
-        public AceitarAmizadeCommand(String idUsuarioAtual, String idAmigoAprovado) {
-            this.idUsuarioAtual = idUsuarioAtual;
-            this.idAmigoAprovado = idAmigoAprovado;
-        }
-
-        // Getters
-        public String getIdUsuarioAtual() { return idUsuarioAtual; }
-        public String getIdAmigoAprovado() { return idAmigoAprovado; }
+    // 1. Defina o Command aqui dentro como um record (ou classe) público.
+    record AceitarAmizadeCommand(String idUsuarioAtual, String idAmigoAprovado) {
     }
+
+    // 2. Altere o método para receber este Command.
+    void aceitarAmizade(AceitarAmizadeCommand command);
 }

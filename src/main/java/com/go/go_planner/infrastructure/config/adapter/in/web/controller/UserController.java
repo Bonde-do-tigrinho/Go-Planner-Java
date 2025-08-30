@@ -45,16 +45,16 @@ public class UserController {
     @PatchMapping("/{idUsuario}/accept-friend/{idAmigo}")
     public ResponseEntity<Void> aceitarAmizade(@PathVariable String idUsuario, @PathVariable String idAmigo) {
         var command = new AceitarAmizadeUseCase.AceitarAmizadeCommand(idUsuario, idAmigo);
-        aceitarAmizadeUseCase.aceitarAmizade(command);
+        aceitarAmizadeUseCase.aceitarAmizade();
         return ResponseEntity.ok().build();
     }
     // ... Código idêntico ao anterior ...
     @DeleteMapping("/{idUsuario}/remove-friend/{idAmigo}")
     public ResponseEntity<Void> removerAmizade(@PathVariable String idUsuario, @PathVariable String idAmigo) {
-        var command = new RemoverAmizadeUseCase.RemoverAmizadeCommand(idUsuario, idAmigo);
+        var command = new RemoverAmizadeUseCase. RemoverAmizadeCommand(idUsuario, idAmigo);
 
         // CORREÇÃO AQUI: O nome do método deve começar com letra minúscula.
-        removerAmizadeUseCase.removerAmizade(command);
+        removerAmizadeUseCase.removerAmizade();
 
         return ResponseEntity.noContent().build();
     }

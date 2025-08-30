@@ -8,8 +8,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @Getter
@@ -28,8 +29,6 @@ public class Usuario {
     @NotBlank(message = "CPF não pode ser vazio")
     private String cpf;
     private String foto;
-    private List<Amigo> amigos = new ArrayList<>();
-    private List<Notificacoes> notificacoes = new ArrayList<>();
+    private Set<String> amigos = new HashSet<>();
+    private List<Notificacoes> notificacoes;
     }
-
-

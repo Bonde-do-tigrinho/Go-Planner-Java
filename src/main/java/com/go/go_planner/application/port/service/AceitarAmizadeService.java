@@ -1,44 +1,57 @@
 package com.go.go_planner.application.port.service;
 
 import com.go.go_planner.application.port.in.AceitarAmizadeUseCase;
+import com.go.go_planner.application.port.out.SolicitacaoAmizadeRepositoryPort;
 import com.go.go_planner.application.port.out.UsuarioRepositoryPort;
-import com.go.go_planner.domain.model.Amigo; // Importe a classe Amigo
+import com.go.go_planner.domain.model.SolicitacaoAmizade;
+import com.go.go_planner.domain.model.StatusSolicitacao;
 import com.go.go_planner.domain.model.Usuario;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List; // Importe a classe List
 
 @Service
 @RequiredArgsConstructor
 public class AceitarAmizadeService implements AceitarAmizadeUseCase {
 
     private final UsuarioRepositoryPort usuarioRepositoryPort;
+    // 1. Injete o repositório de solicitações que criamos
+    private final SolicitacaoAmizadeRepositoryPort solicitacaoAmizadeRepositoryPort;
 
+    // 2. A assinatura do método agora está CORRETA, implementando a interface
     @Override
     public void aceitarAmizade(AceitarAmizadeCommand command) {
-        Usuario usuarioAtual = usuarioRepositoryPort.findById(command.getIdUsuarioAtual())
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
+        final String idUsuarioAtual = command.idUsuarioAtual();
+        final String idAmigoAprovado = command.idAmigoAprovado();
 
-        Usuario amigoAprovado = usuarioRepositoryPort.findById(command.getIdAmigoAprovado())
-                .orElseThrow(() -> new RuntimeException("Amigo não encontrado."));
+        // 3. Encontra a solicitação PENDENTE entre os dois. A ordem não importa.
+        // O aprovado é o 'solicitado', e o atual é quem aceita (originalmente o 'solicitado').
+        // Assumimos que 'idAmigoAprovado' é quem enviou o pedido.
+        SolicitacaoAmizade solicitacao = solicitacaoAmizadeRepositoryPort
+                .findPendenteByParticipantes(idUsuarioAtual, idAmigoAprovado)
+                .orElseThrow(() -> new IllegalStateException("Nenhuma solicitação de amizade pendente encontrada."));
 
-        // --- LÓGICA CORRIGIDA AQUI ---
+        // Validação extra: o usuário que está aceitando deve ser o que foi solicitado.
+        if (!solicitacao.getSolicitadoId().equals(idUsuarioAtual)) {
+            throw new SecurityException("Ação não permitida. Você não pode aceitar este convite.");
+        }
 
-        // 1. Acessa a lista de amigos do usuário atual e atualiza o status do amigo aprovado
-        usuarioAtual.getAmigos().stream()
-                .filter(amigo -> amigo.getIdAmigo().equals(amigoAprovado.getId()))
-                .findFirst()
-                .ifPresent(amigo -> amigo.setStatus(Amigo.StatusAmizade.ACEITO));
+        // 4. Busca os dois objetos de usuário
+        Usuario usuarioAtual = usuarioRepositoryPort.findById(idUsuarioAtual)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado: " + idUsuarioAtual));
 
-        // 2. Acessa a lista de amigos do amigo aprovado e atualiza o status do usuário atual
-        amigoAprovado.getAmigos().stream()
-                .filter(amigo -> amigo.getIdAmigo().equals(usuarioAtual.getId()))
-                .findFirst()
-                .ifPresent(amigo -> amigo.setStatus(Amigo.StatusAmizade.ACEITO));
+        Usuario amigoAprovado = usuarioRepositoryPort.findById(idAmigoAprovado)
+                .orElseThrow(() -> new RuntimeException("Amigo não encontrado: " + idAmigoAprovado));
 
-        // 3. Salva os objetos Usuario com as listas atualizadas
+        // 5. ATUALIZA A LÓGICA: Adiciona os IDs na lista de amigos confirmados de cada um
+        usuarioAtual.getAmigos().add(amigoAprovado.getId());
+        amigoAprovado.getAmigos().add(usuarioAtual.getId());
+
+        // 6. Atualiza o status da SOLICITAÇÃO para ACEITA
+        solicitacao.setStatus(StatusSolicitacao.ACEITA);
+
+        // 7. Salva todas as entidades modificadas
         usuarioRepositoryPort.save(usuarioAtual);
         usuarioRepositoryPort.save(amigoAprovado);
+        solicitacaoAmizadeRepositoryPort.update(solicitacao);
     }
 }
