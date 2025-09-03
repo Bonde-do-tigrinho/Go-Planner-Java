@@ -1,6 +1,7 @@
 package com.go.go_planner.application.port.in;
 
 public interface SolicitarAmizadeUseCase {
-    void solicitarAmizade(String idUsuarioAtual, String idAmigoSolicitado);
-    }
+    record SolicitarAmizadeCommand(String idUsuarioAtual, String idAmigoSolicitado) {}
+
+    void solicitarAmizade(SolicitarAmizadeCommand command);
 }

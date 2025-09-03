@@ -4,17 +4,15 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @AllArgsConstructor
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
 public class Usuario {
 
     @Id

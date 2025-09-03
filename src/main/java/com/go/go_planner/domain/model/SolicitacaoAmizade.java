@@ -1,13 +1,14 @@
 package com.go.go_planner.domain.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.*;
 
 import java.util.Date;
 
-@Setter
-@Getter
+@Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class SolicitacaoAmizade {
     private String id; // ID do documento no Firestore
@@ -15,4 +16,11 @@ public class SolicitacaoAmizade {
     private String solicitadoId;
     private StatusSolicitacao status;
     private Date dataCriacao;
+
+    public SolicitacaoAmizade(String solicitanteId, String solicitadoId, StatusSolicitacao status, Date dataCriacao) {
+        this.solicitanteId = solicitanteId;
+        this.solicitadoId = solicitadoId;
+        this.status = status;
+        this.dataCriacao = dataCriacao;
+    }
 }

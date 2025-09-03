@@ -19,39 +19,35 @@ public class SolicitarAmizadeService implements SolicitarAmizadeUseCase {
     private final SolicitacaoAmizadeRepositoryPort solicitacaoAmizadeRepositoryPort;
 
     @Override
-    public void solicitarAmizade(String idUsuarioAtual, String idAmigoSolicitado) {
-        // 1. Validações Iniciais
+    public void solicitarAmizade(SolicitarAmizadeCommand command) {
+
+        final String idUsuarioAtual = command.idUsuarioAtual();
+        final String idAmigoSolicitado = command.idAmigoSolicitado();
+
         if (idUsuarioAtual.equals(idAmigoSolicitado)) {
-            throw new IllegalArgumentException("Um usuário не pode solicitar amizade a si mesmo.");
+            throw new IllegalArgumentException("Um usuário não pode solicitar amizade a si mesmo.");
         }
 
         Usuario solicitante = usuarioRepositoryPort.findById(idUsuarioAtual)
                 .orElseThrow(() -> new RuntimeException("Usuário solicitante não encontrado: " + idUsuarioAtual));
 
-        Usuario solicitado = usuarioRepositoryPort.findById(idAmigoSolicitado)
+        usuarioRepositoryPort.findById(idAmigoSolicitado)
                 .orElseThrow(() -> new RuntimeException("Usuário solicitado não encontrado: " + idAmigoSolicitado));
 
-        // 2. VERIFICAR se já são amigos ou se já existe uma solicitação pendente
         if (solicitante.getAmigos().contains(idAmigoSolicitado)) {
             throw new IllegalStateException("Vocês já são amigos.");
         }
-
-        // Esta verificação é crucial para não criar solicitações duplicadas
         if (solicitacaoAmizadeRepositoryPort.existeSolicitacaoPendente(idUsuarioAtual, idAmigoSolicitado)) {
             throw new IllegalStateException("Já existe uma solicitação de amizade pendente entre esses usuários.");
         }
 
-        // 3. Criar a nova Solicitação de Amizade
-        SolicitacaoAmizade novaSolicitacao = new SolicitacaoAmizade();
-        novaSolicitacao.setSolicitanteId(idUsuarioAtual);
-        novaSolicitacao.setSolicitadoId(idAmigoSolicitado);
-        novaSolicitacao.setStatus(StatusSolicitacao.PENDENTE);
-        novaSolicitacao.setDataCriacao(new Date()); // Data atual
+        SolicitacaoAmizade novaSolicitacao = new SolicitacaoAmizade(
+                idUsuarioAtual,
+                idAmigoSolicitado,
+                StatusSolicitacao.PENDENTE,
+                new Date());
 
-        // 4. Salvar a solicitação no banco de dados
         solicitacaoAmizadeRepositoryPort.save(novaSolicitacao);
 
-        // 5. (Opcional, mas recomendado) Criar uma notificação para o usuário solicitado
-        // notifiacaoService.criarNotificacaoDeAmizade(solicitante, solicitado);
     }
 }
