@@ -43,8 +43,14 @@ public class AceitarAmizadeService implements AceitarAmizadeUseCase {
                 .orElseThrow(() -> new RuntimeException("Amigo não encontrado: " + idAmigoAprovado));
 
         // 5. ATUALIZA A LÓGICA: Adiciona os IDs na lista de amigos confirmados de cada um
-        usuarioAtual.getAmigos().add(amigoAprovado.getId());
-        amigoAprovado.getAmigos().add(usuarioAtual.getId());
+        if (!usuarioAtual.getAmigos().contains(amigoAprovado.getId())) {
+            usuarioAtual.getAmigos().add(amigoAprovado.getId());
+        }
+
+// Adiciona o usuário atual à lista do amigo aprovado, SE ele já não estiver lá.
+        if (!amigoAprovado.getAmigos().contains(usuarioAtual.getId())) {
+            amigoAprovado.getAmigos().add(usuarioAtual.getId());
+        }
 
         // 6. Atualiza o status da SOLICITAÇÃO para ACEITA
         solicitacao.setStatus(StatusSolicitacao.ACEITA);

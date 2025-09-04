@@ -6,6 +6,7 @@ import com.go.go_planner.domain.model.Usuario;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -22,8 +23,8 @@ public class RemoverAmizadeService implements RemoverAmizadeUseCase {
                 .orElseThrow(() -> new RuntimeException("Amigo não encontrado."));
 
         // 1. Pega a lista de amigos de cada usuário
-        Set<String> listaAmigosUsuarioAtual = usuarioAtual.getAmigos();
-        Set<String> listaAmigosDoAmigo = amigoParaRemover.getAmigos();
+        List<String> listaAmigosUsuarioAtual = usuarioAtual.getAmigos();
+        List<String> listaAmigosDoAmigo = amigoParaRemover.getAmigos();
 
         // 2. Remove o amigo de cada lista usando a lógica 'removeIf'
         listaAmigosUsuarioAtual.removeIf(amigo -> usuarioAtual.equals(amigoParaRemover));

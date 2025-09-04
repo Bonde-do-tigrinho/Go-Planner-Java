@@ -34,9 +34,10 @@ public class SolicitarAmizadeService implements SolicitarAmizadeUseCase {
         usuarioRepositoryPort.findById(idAmigoSolicitado)
                 .orElseThrow(() -> new RuntimeException("Usuário solicitado não encontrado: " + idAmigoSolicitado));
 
-        if (solicitante.getAmigos().contains(idAmigoSolicitado)) {
-            throw new IllegalStateException("Vocês já são amigos.");
-        }
+//        if (solicitante.getAmigos().contains(idAmigoSolicitado)) {
+//            throw new IllegalStateException("Vocês já são amigos.");
+//        }
+
         if (solicitacaoAmizadeRepositoryPort.existeSolicitacaoPendente(idUsuarioAtual, idAmigoSolicitado)) {
             throw new IllegalStateException("Já existe uma solicitação de amizade pendente entre esses usuários.");
         }
@@ -48,6 +49,5 @@ public class SolicitarAmizadeService implements SolicitarAmizadeUseCase {
                 new Date());
 
         solicitacaoAmizadeRepositoryPort.save(novaSolicitacao);
-
     }
 }
