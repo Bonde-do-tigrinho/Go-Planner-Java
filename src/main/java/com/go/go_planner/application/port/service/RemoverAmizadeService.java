@@ -7,11 +7,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class RemoverAmizadeService implements RemoverAmizadeUseCase {
+
     private final UsuarioRepositoryPort usuarioRepositoryPort;
 
     @Override
@@ -27,11 +27,8 @@ public class RemoverAmizadeService implements RemoverAmizadeUseCase {
         List<String> listaAmigosDoAmigo = amigoParaRemover.getAmigos();
 
         // 2. Remove o amigo de cada lista usando a lógica 'removeIf'
-        listaAmigosUsuarioAtual.removeIf(amigo -> usuarioAtual.equals(amigoParaRemover));
-        listaAmigosDoAmigo.removeIf(amigo -> amigoParaRemover.equals(usuarioAtual));
-
-        // As listas dentro dos objetos 'usuarioAtual' e 'amigoParaRemover'
-        // já estão atualizadas. Agora é só salvar.
+        listaAmigosUsuarioAtual.remove(command.idAmigoRemovido());
+        listaAmigosDoAmigo.remove(command.idUsuarioAtual());
 
         // 3. Salva os objetos Usuario atualizados no banco
         usuarioRepositoryPort.save(usuarioAtual);

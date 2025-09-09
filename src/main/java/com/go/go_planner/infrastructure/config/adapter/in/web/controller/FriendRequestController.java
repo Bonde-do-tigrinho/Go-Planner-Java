@@ -37,9 +37,9 @@ public class FriendRequestController {
         return ResponseEntity.ok().body("Amizade aceita com sucesso!");
     }
     // ... Código idêntico ao anterior ...
-    @DeleteMapping("/{idUsuario}/remove-friend/{idAmigo}")
-    public ResponseEntity<String> removerAmizade(@PathVariable String idUsuario, @PathVariable String idAmigo) {
-        var command = new RemoverAmizadeUseCase.RemoverAmizadeCommand(idUsuario, idAmigo);
+    @DeleteMapping("/remove-friend")
+    public ResponseEntity<String> removerAmizade(@Valid @RequestBody SolicitarAmizadeRequestDTO request) {
+        var command = new RemoverAmizadeUseCase.RemoverAmizadeCommand(request.solicitadoId(), request.solicitanteId());
         removerAmizadeUseCase.removerAmizade(command);
         return ResponseEntity.ok().body("Amizade removida com sucesso!");
     }

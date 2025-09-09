@@ -8,6 +8,7 @@ import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.Query;
 import com.google.cloud.firestore.QuerySnapshot;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
+@Slf4j
 @Repository
 @Component
 @RequiredArgsConstructor
@@ -25,7 +27,6 @@ public class SolicitacaoAmizadeFirestoreAdapter implements SolicitacaoAmizadeRep
 
     @Override
     public SolicitacaoAmizade save(SolicitacaoAmizade solicitacao) {
-        // O método .add() cria um documento com um ID gerado automaticamente
         var documentReference = firestore.collection(COLLECTION_NAME).document();
         solicitacao.setId(documentReference.getId()); // Pega o ID gerado e seta no objeto
         documentReference.set(solicitacao);
