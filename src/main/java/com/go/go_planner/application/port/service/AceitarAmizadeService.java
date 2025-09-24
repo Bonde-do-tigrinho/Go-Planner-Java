@@ -7,14 +7,17 @@ import com.go.go_planner.domain.model.SolicitacaoAmizade;
 import com.go.go_planner.domain.model.StatusSolicitacao;
 import com.go.go_planner.domain.model.Usuario;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class AceitarAmizadeService implements AceitarAmizadeUseCase {
 
+    @Autowired
     private final UsuarioRepositoryPort usuarioRepositoryPort;
     // 1. Injete o repositório de solicitações que criamos
+    @Autowired
     private final SolicitacaoAmizadeRepositoryPort solicitacaoAmizadeRepositoryPort;
 
     // 2. A assinatura do método agora está CORRETA, implementando a interface
