@@ -7,6 +7,7 @@ import com.go.go_planner.domain.model.SolicitacaoAmizade;
 import com.go.go_planner.domain.model.StatusSolicitacao;
 import com.go.go_planner.domain.model.Usuario;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -15,7 +16,9 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class SolicitarAmizadeService implements SolicitarAmizadeUseCase {
 
+    @Autowired
     private final UsuarioRepositoryPort usuarioRepositoryPort;
+    @Autowired
     private final SolicitacaoAmizadeRepositoryPort solicitacaoAmizadeRepositoryPort;
 
     @Override

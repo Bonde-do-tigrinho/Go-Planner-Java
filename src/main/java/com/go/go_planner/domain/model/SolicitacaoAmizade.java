@@ -11,7 +11,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SolicitacaoAmizade {
-    private String id; // ID do documento no Firestore
+    private String id;
     private String solicitanteId;
     private String solicitadoId;
     private StatusSolicitacao status;

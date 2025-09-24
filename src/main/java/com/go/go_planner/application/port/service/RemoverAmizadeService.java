@@ -4,6 +4,7 @@ import com.go.go_planner.application.port.in.RemoverAmizadeUseCase;
 import com.go.go_planner.application.port.out.UsuarioRepositoryPort;
 import com.go.go_planner.domain.model.Usuario;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RemoverAmizadeService implements RemoverAmizadeUseCase {
 
+    @Autowired
     private final UsuarioRepositoryPort usuarioRepositoryPort;
 
     @Override

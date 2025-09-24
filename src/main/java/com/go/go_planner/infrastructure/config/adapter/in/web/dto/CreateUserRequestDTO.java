@@ -17,8 +17,6 @@ public record CreateUserRequestDTO(    // @NotBlank garante que o campo não sej
                                        String senha,
 
                                        @NotBlank(message = "O CPF não pode ser vazio")
-                                       // Para um CPF real, você poderia usar @CPF do hibernate-validator
-                                       // ou criar uma validação customizada.
                                        String cpf
 ) {
 }
