@@ -1,8 +1,8 @@
 package com.go.go_planner.infrastructure.config.adapter.in.web.controller;
 
 import com.go.go_planner.application.port.in.CreateUserUseCase;
+import com.go.go_planner.application.port.in.GetUserUseCase;
 import com.go.go_planner.application.port.in.LoginUserUseCase;
-import com.go.go_planner.application.port.in.GetUserUseCase; // Importe o novo UseCase
 import com.go.go_planner.domain.model.Usuario;
 import com.go.go_planner.infrastructure.config.adapter.in.web.dto.CreateUserRequestDTO;
 import com.go.go_planner.infrastructure.config.adapter.in.web.dto.LoginRequestDTO;
@@ -43,7 +43,6 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> loginUser(@Valid @RequestBody LoginRequestDTO request) {
-        System.out.println("--- PASSO 1: CHEGUEI NO CONTROLLER DE LOGIN ---");
         var command = userDtoMapper.toLoginCommand(request);
         LoginUserUseCase.LoginResult result = loginUserUseCase.loginUser(command);
         UserResponseDTO userInfo = userDtoMapper.toResponse(result.usuario());
@@ -52,11 +51,8 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-
-}
-
-    @GetMapping("/{id}")
-    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable String id) {
+    @GetMapping("/getId")
+    public ResponseEntity<UserResponseDTO> getUserById(@Valid @RequestBody String id) {
         try {
             // 1. O controlador chama o Use Case para buscar o usuário
             Usuario usuario = getUserUseCase.getUserById(id);
@@ -72,4 +68,6 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
+
+
 }

@@ -8,14 +8,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class UserService implements GetUserUseCase {
+public class GetUserService implements GetUserUseCase {
 
     private final UsuarioRepositoryPort userRepository; // O repositório é a porta de saída
 
     @Override
     public Usuario getUserById(String id) {
-        // Implemente a lógica de busca aqui.
-        // O repositório irá fazer a comunicação com o banco de dados.
         return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
     }
