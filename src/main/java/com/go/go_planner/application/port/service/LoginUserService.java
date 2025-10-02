@@ -1,7 +1,7 @@
 package com.go.go_planner.application.port.service;
 
 import com.go.go_planner.application.port.in.LoginUserUseCase;
-import com.go.go_planner.application.port.out.UsuarioRepositoryPort;
+import com.go.go_planner.application.port.out.UsuarioRepository;
 import com.go.go_planner.domain.model.Usuario;
 import com.go.go_planner.infrastructure.config.security.JwtService;
 import lombok.RequiredArgsConstructor;
@@ -12,25 +12,18 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class LoginUserService implements LoginUserUseCase {
-
     private final AuthenticationManager authenticationManager;
-    private final UsuarioRepositoryPort usuarioRepositoryPort;
+    private final UsuarioRepository UsuarioRepository;
     private final JwtService jwtService;
 
     @Override
     public LoginResult loginUser(LoginUserCommand command) {
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        command.email(),
-                        command.senha()
-                )
+                new UsernamePasswordAuthenticationToken(command.email(), command.senha())
         );
-
-        Usuario usuario = (Usuario) usuarioRepositoryPort.findByEmail(command.email())
+        Usuario usuario = UsuarioRepository.findByEmail(command.email())
                 .orElseThrow(() -> new IllegalStateException("Usuário autenticado não encontrado."));
-
         String token = jwtService.generateToken(usuario);
-
         return new LoginResult(token, usuario);
     }
 }

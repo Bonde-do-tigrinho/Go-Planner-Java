@@ -1,13 +1,10 @@
 package com.go.go_planner.infrastructure.config.adapter.in.web.controller;
 
 import com.go.go_planner.application.port.in.CreateUserUseCase;
+import com.go.go_planner.application.port.in.GetUserUseCase;
 import com.go.go_planner.application.port.in.LoginUserUseCase;
-import com.go.go_planner.application.port.in.GetUserUseCase; // Importe o novo UseCase
 import com.go.go_planner.domain.model.Usuario;
-import com.go.go_planner.infrastructure.config.adapter.in.web.dto.CreateUserRequestDTO;
-import com.go.go_planner.infrastructure.config.adapter.in.web.dto.LoginRequestDTO;
-import com.go.go_planner.infrastructure.config.adapter.in.web.dto.LoginResponseDTO;
-import com.go.go_planner.infrastructure.config.adapter.in.web.dto.UserResponseDTO;
+import com.go.go_planner.infrastructure.config.adapter.in.web.dto.*;
 import com.go.go_planner.infrastructure.config.adapter.in.web.mapper.UserDtoMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +40,6 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> loginUser(@Valid @RequestBody LoginRequestDTO request) {
-        System.out.println("--- PASSO 1: CHEGUEI NO CONTROLLER DE LOGIN ---");
         var command = userDtoMapper.toLoginCommand(request);
         LoginUserUseCase.LoginResult result = loginUserUseCase.loginUser(command);
         UserResponseDTO userInfo = userDtoMapper.toResponse(result.usuario());
@@ -52,24 +48,23 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-
-}
-
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable String id) {
         try {
-            // 1. O controlador chama o Use Case para buscar o usuário
-            Usuario usuario = getUserUseCase.getUserById(id);
+            // 1. O controlador chama o Use Case para buscar o utilizador pelo ID
+            Usuario usuarioEncontrado = getUserUseCase.getUserById(id);
 
             // 2. Mapeia o objeto de domínio para o DTO de resposta
-            UserResponseDTO response = userDtoMapper.toResponse(usuario);
+            UserResponseDTO response = userDtoMapper.toResponse(usuarioEncontrado);
 
-            // 3. Retorna a resposta HTTP 200 OK com o DTO
+            // 3. Retorna a resposta HTTP 200 OK com os dados do utilizador
             return ResponseEntity.ok(response);
-        } catch (RuntimeException e) {
-            // Se o Use Case lançar uma exceção (usuário não encontrado),
-            // retorna uma resposta 404 Not Found.
+
+        } catch (RuntimeException e) { // Idealmente, capture uma exceção específica, como UserNotFoundException
+            // Se o utilizador não for encontrado, retorna 404 Not Found
             return ResponseEntity.notFound().build();
         }
     }
+
+
 }

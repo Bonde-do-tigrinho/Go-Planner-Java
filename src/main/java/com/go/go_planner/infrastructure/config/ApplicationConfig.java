@@ -1,6 +1,6 @@
 package com.go.go_planner.infrastructure.config;
 
-import com.go.go_planner.application.port.out.UsuarioRepositoryPort;
+import com.go.go_planner.application.port.out.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,18 +10,18 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder; // Importe a INTERFACE
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
-    private final UsuarioRepositoryPort usuarioRepositoryPort;
+    private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> usuarioRepositoryPort.findByEmail(username)
+        return username -> usuarioRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado com o email: " + username));
     }
 
@@ -29,7 +29,6 @@ public class ApplicationConfig {
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService());
-        // USE O BEAN INJETADO DIRETAMENTE
         authProvider.setPasswordEncoder(passwordEncoder);
         return authProvider;
     }

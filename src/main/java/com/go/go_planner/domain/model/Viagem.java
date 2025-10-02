@@ -1,21 +1,25 @@
 package com.go.go_planner.domain.model;
 
+import jakarta.persistence.Id;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
 public class Viagem {
 
-    private Long    id;
+    @Id
+    private String    id;
     private String  titulo;
     private String  localPartida;
     private String  localDestino;
-    private Date    dataPartida;
-    private Date    dataRetorno;
+    private LocalDateTime dataPartida;
+    private LocalDateTime    dataRetorno;
     private String  descricao;
     private Boolean favoritada;
     private String  imagem;
-    private Usuario criadorViagemID; // ID do usuário que criou a viagem
+    private String criadorViagemID; // ID do usuário que criou a viagem
     private List<Atividade> atividades;
-    private List<Usuario>   participantes;
+    private List<String>   participantes;
 
 }

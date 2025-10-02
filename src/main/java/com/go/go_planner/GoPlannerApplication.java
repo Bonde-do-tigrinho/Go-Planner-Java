@@ -10,6 +10,7 @@ import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfigurat
 public class GoPlannerApplication {
 
     public static void main(String[] args) {
+        System.setProperty("jdk.tls.client.protocols", "TLSv1.2");
         SpringApplication.run(GoPlannerApplication.class, args);
     }
 }
