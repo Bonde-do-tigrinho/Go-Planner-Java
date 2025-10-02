@@ -1,10 +1,9 @@
 package com.go.go_planner.domain.model;
 
-import com.google.cloud.firestore.annotation.Exclude;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -14,10 +13,10 @@ import java.util.List;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Document(collection = "usuarios")
 public class Usuario implements UserDetails {
 
+    @Id
     private String id;
     private String nome;
     private String email;
@@ -25,20 +24,17 @@ public class Usuario implements UserDetails {
     private String cpf;
     private String foto;
     private List<String> amigos;
-    private List<Notificacoes> notificacoes;
+    private List<Notificacao> notificacoes;
 
     // ... seus métodos getAmigos() e getNotificacoes() continuam iguais ...
     public List<String> getAmigos() {
         if (this.amigos == null) { this.amigos = new ArrayList<>(); }
         return this.amigos;
     }
-    public List<Notificacoes> getNotificacoes() {
+    public List<Notificacao> getNotificacoes() {
         if (this.notificacoes == null) { this.notificacoes = new ArrayList<>(); }
         return this.notificacoes;
     }
-
-
-    // --- MÉTODOS DO USERDETAILS CORRIGIDOS ---
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -46,33 +42,32 @@ public class Usuario implements UserDetails {
     }
 
     @Override
-    @Exclude
     public String getPassword() {
-        return this.senha; // CORRETO: Retorna a senha criptografada
+        return this.senha;
     }
 
     @Override
     public String getUsername() {
-        return this.email; // CORRETO: Retorna o email como username
+        return this.nome;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return true; // CORRETO: Sintaxe simplificada
+        return UserDetails.super.isAccountNonExpired();
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true; // CORRETO: Sintaxe simplificada
+        return UserDetails.super.isAccountNonLocked();
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true; // CORRETO: Sintaxe simplificada
+        return UserDetails.super.isCredentialsNonExpired();
     }
 
     @Override
     public boolean isEnabled() {
-        return true; // CORRETO: Sintaxe simplificada
+        return UserDetails.super.isEnabled();
     }
 }

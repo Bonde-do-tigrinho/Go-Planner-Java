@@ -1,29 +1,23 @@
 package com.go.go_planner.application.port.service;
 
 import com.go.go_planner.application.port.in.SolicitarAmizadeUseCase;
-import com.go.go_planner.application.port.out.SolicitacaoAmizadeRepositoryPort;
-import com.go.go_planner.application.port.out.UsuarioRepositoryPort;
-import com.go.go_planner.domain.model.SolicitacaoAmizade;
-import com.go.go_planner.domain.model.StatusSolicitacao;
-import com.go.go_planner.domain.model.Usuario;
+import com.go.go_planner.application.port.out.NotificacaoRepository;
+import com.go.go_planner.application.port.out.SolicitacaoAmizadeRepository;
+import com.go.go_planner.application.port.out.UsuarioRepository;
+import com.go.go_planner.domain.model.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
 public class SolicitarAmizadeService implements SolicitarAmizadeUseCase {
 
-    @Autowired
-    private final UsuarioRepositoryPort usuarioRepositoryPort;
-    @Autowired
-    private final SolicitacaoAmizadeRepositoryPort solicitacaoAmizadeRepositoryPort;
+    private final UsuarioRepository usuarioRepository;
+    private final SolicitacaoAmizadeRepository solicitacaoAmizadeRepository;
+    private final NotificacaoRepository notificacaoRepository;
 
     @Override
     public void solicitarAmizade(SolicitarAmizadeCommand command) {
-
         final String idUsuarioAtual = command.idUsuarioAtual();
         final String idAmigoSolicitado = command.idAmigoSolicitado();
 
@@ -31,26 +25,37 @@ public class SolicitarAmizadeService implements SolicitarAmizadeUseCase {
             throw new IllegalArgumentException("Um usuário não pode solicitar amizade a si mesmo.");
         }
 
-        Usuario solicitante = usuarioRepositoryPort.findById(idUsuarioAtual)
+        Usuario solicitante = usuarioRepository.findById(idUsuarioAtual)
                 .orElseThrow(() -> new RuntimeException("Usuário solicitante não encontrado: " + idUsuarioAtual));
 
-        usuarioRepositoryPort.findById(idAmigoSolicitado)
+        Usuario solicitado = usuarioRepository.findById(idAmigoSolicitado)
                 .orElseThrow(() -> new RuntimeException("Usuário solicitado não encontrado: " + idAmigoSolicitado));
 
-//        if (solicitante.getAmigos().contains(idAmigoSolicitado)) {
-//            throw new IllegalStateException("Vocês já são amigos.");
-//        }
+        if (solicitante.getAmigos().contains(idAmigoSolicitado)) {
+            throw new IllegalStateException("Vocês já são amigos.");
+        }
 
-        if (solicitacaoAmizadeRepositoryPort.existeSolicitacaoPendente(idUsuarioAtual, idAmigoSolicitado)) {
+        // 👇 LINHA CORRIGIDA 👇
+        if (solicitacaoAmizadeRepository.findPendenteByParticipantes(idUsuarioAtual, idAmigoSolicitado).isPresent()) {
             throw new IllegalStateException("Já existe uma solicitação de amizade pendente entre esses usuários.");
         }
 
-        SolicitacaoAmizade novaSolicitacao = new SolicitacaoAmizade(
-                idUsuarioAtual,
-                idAmigoSolicitado,
-                StatusSolicitacao.PENDENTE,
-                new Date());
+        SolicitacaoAmizade novaSolicitacao = new SolicitacaoAmizade();
+        novaSolicitacao.setSolicitanteId(idUsuarioAtual);
+        novaSolicitacao.setSolicitadoId(idAmigoSolicitado);
+        novaSolicitacao.setStatus(StatusSolicitacao.PENDENTE);
 
-        solicitacaoAmizadeRepositoryPort.save(novaSolicitacao);
+        SolicitacaoAmizade solicitacaoSalva = solicitacaoAmizadeRepository.save(novaSolicitacao);
+
+        String mensagem = solicitante.getNome() + " enviou-lhe um pedido de amizade.";
+
+        Notificacao novaNotificacao = new Notificacao(
+                solicitado.getId(),
+                TipoNotificacao.SOLICITACAO_AMIZADE,
+                solicitacaoSalva.getId(),
+                mensagem
+        );
+
+        notificacaoRepository.save(novaNotificacao);
     }
 }
