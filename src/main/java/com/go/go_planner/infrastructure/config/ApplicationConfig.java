@@ -1,6 +1,7 @@
 package com.go.go_planner.infrastructure.config;
 
 import com.go.go_planner.application.port.out.UsuarioRepository;
+import com.go.go_planner.domain.model.Usuario;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,8 +22,17 @@ public class ApplicationConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> usuarioRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado com o email: " + username));
+        return username -> {
+            System.out.println("--- LOG 2: UserDetailsService está a buscar o usuário: " + username + " ---");
+
+            Usuario usuario = usuarioRepository.findByEmail(username)
+                    .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado com o email: " + username));
+
+            // 👇 ADICIONE ESTA LINHA 👇
+            System.out.println("--- LOG 3: Usuário encontrado no DB. Senha (hash): " + usuario.getSenha() + " ---");
+
+            return usuario; // ou return new UserDetailsImpl(usuario);
+        };
     }
 
     @Bean

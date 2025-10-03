@@ -40,6 +40,8 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> loginUser(@Valid @RequestBody LoginRequestDTO request) {
+        System.out.println("--- LOG 1: Controller de Login foi alcançado. ---");
+
         var command = userDtoMapper.toLoginCommand(request);
         LoginUserUseCase.LoginResult result = loginUserUseCase.loginUser(command);
         UserResponseDTO userInfo = userDtoMapper.toResponse(result.usuario());
@@ -51,20 +53,15 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable String id) {
         try {
-            // 1. O controlador chama o Use Case para buscar o utilizador pelo ID
             Usuario usuarioEncontrado = getUserUseCase.getUserById(id);
 
-            // 2. Mapeia o objeto de domínio para o DTO de resposta
             UserResponseDTO response = userDtoMapper.toResponse(usuarioEncontrado);
 
-            // 3. Retorna a resposta HTTP 200 OK com os dados do utilizador
             return ResponseEntity.ok(response);
 
-        } catch (RuntimeException e) { // Idealmente, capture uma exceção específica, como UserNotFoundException
-            // Se o utilizador não for encontrado, retorna 404 Not Found
+        } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
     }
-
 
 }

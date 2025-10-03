@@ -23,8 +23,8 @@ public class Usuario implements UserDetails {
     private String senha;
     private String cpf;
     private String foto;
-    private List<String> amigos;
-    private List<Notificacao> notificacoes;
+    private List<String> amigos = new ArrayList<>();
+    private List<Notificacao> notificacoes = new ArrayList<>();
 
     // ... seus métodos getAmigos() e getNotificacoes() continuam iguais ...
     public List<String> getAmigos() {
@@ -48,7 +48,7 @@ public class Usuario implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.nome;
+        return this.email; // Deve estar assim
     }
 
     @Override
