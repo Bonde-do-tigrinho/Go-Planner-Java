@@ -20,14 +20,14 @@ public class FriendRequestController {
     private final RemoverAmizadeUseCase removerAmizadeUseCase;
 
     @PostMapping("/request")
-    public ResponseEntity<Void> solicitarAmizade(@Valid @RequestBody SolicitarAmizadeRequestDTO request) {
+    public ResponseEntity<String> solicitarAmizade(@Valid @RequestBody SolicitarAmizadeRequestDTO request) {
         var command = new SolicitarAmizadeUseCase.SolicitarAmizadeCommand(
                 request.solicitanteId(),
                 request.solicitadoId()
         );
         solicitarAmizadeUseCase.solicitarAmizade(command);
 
-        return ResponseEntity.accepted().build();
+        return ResponseEntity.accepted().body("Solicitação de amizade enviada com sucesso!");
     }
 
     @PatchMapping("/accept-friend")
@@ -36,11 +36,18 @@ public class FriendRequestController {
         aceitarAmizadeUseCase.aceitarAmizade(command);
         return ResponseEntity.ok().body("Amizade aceita com sucesso!");
     }
-    // ... Código idêntico ao anterior ...
+
     @DeleteMapping("/remove-friend")
     public ResponseEntity<String> removerAmizade(@Valid @RequestBody SolicitarAmizadeRequestDTO request) {
         var command = new RemoverAmizadeUseCase.RemoverAmizadeCommand(request.solicitadoId(), request.solicitanteId());
         removerAmizadeUseCase.removerAmizade(command);
         return ResponseEntity.ok().body("Amizade removida com sucesso!");
+    }
+
+    @PatchMapping("/decline-friend")
+    public ResponseEntity<String> recusarAmizade(@Valid @RequestBody SolicitarAmizadeRequestDTO request) {
+        var command = new RemoverAmizadeUseCase.RemoverAmizadeCommand(request.solicitadoId(), request.solicitanteId());
+        removerAmizadeUseCase.removerAmizade(command);
+        return ResponseEntity.ok().body("Amizade recusada com sucesso!");
     }
 }
