@@ -40,8 +40,6 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> loginUser(@Valid @RequestBody LoginRequestDTO request) {
-        System.out.println("--- LOG 1: Controller de Login foi alcançado. ---");
-
         var command = userDtoMapper.toLoginCommand(request);
         LoginUserUseCase.LoginResult result = loginUserUseCase.loginUser(command);
         UserResponseDTO userInfo = userDtoMapper.toResponse(result.usuario());
@@ -54,14 +52,16 @@ public class UserController {
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable String id) {
         try {
             Usuario usuarioEncontrado = getUserUseCase.getUserById(id);
-
             UserResponseDTO response = userDtoMapper.toResponse(usuarioEncontrado);
-
             return ResponseEntity.ok(response);
-
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @PatchMapping("update-profile")
+    public ResponseEntity updateProfile(String id){
+        return ResponseEntity.ok().body("Perfil atualizado com sucesso!");
     }
 
 }

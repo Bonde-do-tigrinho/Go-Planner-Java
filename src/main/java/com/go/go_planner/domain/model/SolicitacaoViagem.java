@@ -5,11 +5,12 @@ import org.springframework.data.annotation.Id;
 import java.util.Date;
 
 public class SolicitacaoViagem {
+
     @Id
     private String id;
     private String solicitanteId;
     private String solicitadoId;
-    private Viagem viagem;
+    private String IDviagem; //nao sei se aqui realmente éo id
     private StatusSolicitacao status;
     private Date dataCriacao;
 
