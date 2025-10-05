@@ -35,7 +35,6 @@ public class SolicitarAmizadeService implements SolicitarAmizadeUseCase {
             throw new IllegalStateException("Vocês já são amigos.");
         }
 
-        // 👇 LINHA CORRIGIDA 👇
         if (solicitacaoAmizadeRepository.findPendenteByParticipantes(idUsuarioAtual, idAmigoSolicitado).isPresent()) {
             throw new IllegalStateException("Já existe uma solicitação de amizade pendente entre esses usuários.");
         }
