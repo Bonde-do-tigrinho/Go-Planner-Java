@@ -11,6 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import com.go.go_planner.application.port.in.GetUsuarioByEmailUseCase;
+import org.springframework.web.bind.annotation.RequestParam;
+import java.util.NoSuchElementException;
 
 import java.net.URI;
 
@@ -23,6 +26,8 @@ public class UserController {
     private final GetUserUseCase getUserUseCase; // Adicione o novo UseCase
     private final UserDtoMapper userDtoMapper;
     private final LoginUserUseCase loginUserUseCase;
+    private final GetUsuarioByEmailUseCase getUsuarioByEmailUseCase;
+
 
 
     @PostMapping("/cadastrar")
@@ -64,4 +69,19 @@ public class UserController {
         return ResponseEntity.ok().body("Perfil atualizado com sucesso!");
     }
 
+    @GetMapping("/by-email")
+    public ResponseEntity<UserResponseDTO> getUsuarioByEmail(@RequestParam String email) {
+        try {
+            // Delega a chamada para o Use Case e mapeia o resultado
+            Usuario usuario = getUsuarioByEmailUseCase.getUsuarioByEmail(email);
+            UserResponseDTO response = userDtoMapper.toResponse(usuario);
+
+            return ResponseEntity.ok(response);
+        } catch (NoSuchElementException e) {
+            // Se o usuário não for encontrado, retorna 404
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
+
+
