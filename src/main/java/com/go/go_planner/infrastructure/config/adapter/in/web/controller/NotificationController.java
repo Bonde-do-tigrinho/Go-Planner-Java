@@ -1,7 +1,6 @@
 package com.go.go_planner.infrastructure.config.adapter.in.web.controller;
 
 import com.go.go_planner.application.port.out.NotificacaoRepository;
-import com.go.go_planner.application.port.out.SolicitacaoAmizadeRepository;
 import com.go.go_planner.domain.model.Notificacao;
 import com.go.go_planner.domain.model.Usuario;
 import lombok.RequiredArgsConstructor;

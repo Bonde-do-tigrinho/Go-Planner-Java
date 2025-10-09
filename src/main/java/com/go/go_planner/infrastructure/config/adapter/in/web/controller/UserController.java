@@ -3,12 +3,14 @@ package com.go.go_planner.infrastructure.config.adapter.in.web.controller;
 import com.go.go_planner.application.port.in.CreateUserUseCase;
 import com.go.go_planner.application.port.in.GetUserUseCase;
 import com.go.go_planner.application.port.in.LoginUserUseCase;
+import com.go.go_planner.application.port.in.UpdateUserUseCase;
 import com.go.go_planner.domain.model.Usuario;
 import com.go.go_planner.infrastructure.config.adapter.in.web.dto.*;
 import com.go.go_planner.infrastructure.config.adapter.in.web.mapper.UserDtoMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -20,21 +22,26 @@ import java.net.URI;
 public class UserController {
 
     private final CreateUserUseCase createUserUseCase;
-    private final GetUserUseCase getUserUseCase; // Adicione o novo UseCase
+    private final GetUserUseCase getUserUseCase;
     private final UserDtoMapper userDtoMapper;
     private final LoginUserUseCase loginUserUseCase;
+    private final UpdateUserUseCase updateUserUseCase;
 
 
     @PostMapping("/cadastrar")
     public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody CreateUserRequestDTO request) {
-        Usuario usuarioParaCriar = userDtoMapper.toDomain(request);
-        Usuario usuarioCriado = createUserUseCase.createUser(usuarioParaCriar);
-        UserResponseDTO response = userDtoMapper.toResponse(usuarioCriado);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(usuarioCriado.getId())
-                .toUri();
-        return ResponseEntity.created(location).body(response);
+        try {
+            Usuario usuarioParaCriar = userDtoMapper.toDomain(request);
+            Usuario usuarioCriado = createUserUseCase.createUser(usuarioParaCriar);
+            UserResponseDTO response = userDtoMapper.toResponse(usuarioCriado);
+            URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                    .path("/{id}")
+                    .buildAndExpand(usuarioCriado.getId())
+                    .toUri();
+            return ResponseEntity.created(location).body(response);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
@@ -59,9 +66,25 @@ public class UserController {
         }
     }
 
-    @PatchMapping("update-profile")
-    public ResponseEntity updateProfile(String id){
-        return ResponseEntity.ok().body("Perfil atualizado com sucesso!");
+    @PatchMapping("/me")
+    public ResponseEntity<UserResponseDTO> updateUser(
+            @Valid @RequestBody UpdateUserRequestDTO request,
+            @AuthenticationPrincipal Usuario usuarioLogado
+    ) {
+
+        var command = new UpdateUserUseCase.UpdateUserCommand(
+                usuarioLogado.getId(),
+                request.nome(),
+                request.email(),
+                request.cpf(),
+                request.foto()
+        );
+
+        Usuario usuarioAtualizado = updateUserUseCase.updateUser(command);
+
+        UserResponseDTO response = userDtoMapper.toResponse(usuarioAtualizado);
+
+        return ResponseEntity.ok(response);
     }
 
 }
