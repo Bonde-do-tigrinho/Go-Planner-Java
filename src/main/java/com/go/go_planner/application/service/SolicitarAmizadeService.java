@@ -1,4 +1,4 @@
-package com.go.go_planner.application.port.service;
+package com.go.go_planner.application.service;
 
 import com.go.go_planner.application.port.in.SolicitarAmizadeUseCase;
 import com.go.go_planner.application.port.out.NotificacaoRepository;

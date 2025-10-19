@@ -1,14 +1,12 @@
 package com.go.go_planner.infrastructure.config.adapter.in.web.controller;
 
-import com.go.go_planner.application.port.in.CreateUserUseCase;
-import com.go.go_planner.application.port.in.GetUserUseCase;
-import com.go.go_planner.application.port.in.LoginUserUseCase;
-import com.go.go_planner.application.port.in.UpdateUserUseCase;
+import com.go.go_planner.application.port.in.*;
 import com.go.go_planner.domain.model.Usuario;
 import com.go.go_planner.infrastructure.config.adapter.in.web.dto.*;
 import com.go.go_planner.infrastructure.config.adapter.in.web.mapper.UserDtoMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +14,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
@@ -26,6 +25,7 @@ public class UserController {
     private final UserDtoMapper userDtoMapper;
     private final LoginUserUseCase loginUserUseCase;
     private final UpdateUserUseCase updateUserUseCase;
+    private final ConfirmAccountUseCase confirmAccountUseCase;
 
 
     @PostMapping("/cadastrar")
@@ -40,6 +40,7 @@ public class UserController {
                     .toUri();
             return ResponseEntity.created(location).body(response);
         } catch (Exception e) {
+            log.error("Erro ao criar usuário: {}", e.getMessage());
             throw new RuntimeException(e);
         }
     }
@@ -47,13 +48,19 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> loginUser(@Valid @RequestBody LoginRequestDTO request) {
-        var command = userDtoMapper.toLoginCommand(request);
-        LoginUserUseCase.LoginResult result = loginUserUseCase.loginUser(command);
-        UserResponseDTO userInfo = userDtoMapper.toResponse(result.usuario());
-        LoginResponseDTO response = new LoginResponseDTO(result.token(), userInfo);
+        try {
+            var command = userDtoMapper.toLoginCommand(request);
+            LoginUserUseCase.LoginResult result = loginUserUseCase.loginUser(command);
+            UserResponseDTO userInfo = userDtoMapper.toResponse(result.usuario());
+            LoginResponseDTO response = new LoginResponseDTO(result.token(), userInfo);
 
-        return ResponseEntity.ok(response);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            log.error("Erro durante o login: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(new LoginResponseDTO("Credenciais inválidas", null));
+        }
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable String id) {
@@ -61,7 +68,8 @@ public class UserController {
             Usuario usuarioEncontrado = getUserUseCase.getUserById(id);
             UserResponseDTO response = userDtoMapper.toResponse(usuarioEncontrado);
             return ResponseEntity.ok(response);
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
+            log.error("Usuário não encontrado com id {}: {}", id, e.getMessage());
             return ResponseEntity.notFound().build();
         }
     }
@@ -85,6 +93,14 @@ public class UserController {
         UserResponseDTO response = userDtoMapper.toResponse(usuarioAtualizado);
 
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/confirm-account")
+    public ResponseEntity<String> confirmAccount(@RequestBody ConfirmAccountRequestDTO request) {
+        var command = new ConfirmAccountUseCase.ConfirmAccountCommand(request.email(), request.codigo());
+        confirmAccountUseCase.confirmAccount(command);
+        return ResponseEntity.ok("Conta ativada com sucesso!");
+
     }
 
 }
