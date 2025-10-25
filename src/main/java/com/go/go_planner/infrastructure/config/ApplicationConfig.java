@@ -23,15 +23,11 @@ public class ApplicationConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> {
-            System.out.println("--- LOG 2: UserDetailsService está a buscar o usuário: " + username + " ---");
 
             Usuario usuario = usuarioRepository.findByEmail(username)
                     .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado com o email: " + username));
 
-            // 👇 ADICIONE ESTA LINHA 👇
-            System.out.println("--- LOG 3: Usuário encontrado no DB. Senha (hash): " + usuario.getSenha() + " ---");
-
-            return usuario; // ou return new UserDetailsImpl(usuario);
+            return usuario;
         };
     }
 
