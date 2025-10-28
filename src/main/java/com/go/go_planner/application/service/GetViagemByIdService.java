@@ -1,4 +1,4 @@
-package com.go.go_planner.application.port.service;
+package com.go.go_planner.application.service;
 
 import com.go.go_planner.application.port.in.GetViagemUseCase;
 import com.go.go_planner.application.port.out.ViagemRepository;
@@ -10,7 +10,7 @@ import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
-public class ViagemService implements GetViagemUseCase {
+public class GetViagemByIdService implements GetViagemUseCase {
 
     private final ViagemRepository viagemRepository;
 
@@ -18,10 +18,5 @@ public class ViagemService implements GetViagemUseCase {
     public Viagem getViagemById(String id) {
         return viagemRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Viagem não encontrada com o ID: " + id));
-    }
-
-    @Override
-    public Viagem getTripById(String id) {
-        return null;
     }
 }

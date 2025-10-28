@@ -107,7 +107,6 @@ public class UserController {
 
     }
 
-}
     @GetMapping("/by-email")
     public ResponseEntity<UserResponseDTO> getUsuarioByEmail(@RequestParam String email) {
         try {
