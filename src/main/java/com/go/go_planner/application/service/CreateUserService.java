@@ -4,6 +4,7 @@ import com.go.go_planner.application.port.in.CreateUserUseCase;
 import com.go.go_planner.application.port.out.UsuarioRepository;
 import com.go.go_planner.domain.model.StatusUsuario;
 import com.go.go_planner.domain.model.Usuario;
+import com.go.go_planner.application.port.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -41,6 +42,7 @@ public class CreateUserService implements CreateUserUseCase {
                 + "Bem-vindo ao Go Planner. Use o código abaixo para ativar sua conta:\n\n"
                 + "CÓDIGO: " + codigo + "\n\n"
                 + "Este código expira em 15 minutos.";
+
 
         emailService.sendSimpleMessage(usuario.getEmail(), subject, text);
 
