@@ -1,4 +1,4 @@
-package com.go.go_planner.application.port.service;
+package com.go.go_planner.application.service;
 
 import com.go.go_planner.application.port.in.GetAmigosUseCase;
 import com.go.go_planner.application.port.out.UsuarioRepository;
@@ -12,7 +12,7 @@ import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
-public class AmigosService implements GetAmigosUseCase {
+public class GetAmigosService implements GetAmigosUseCase {
 
     private final UsuarioRepository usuarioRepository;
 
