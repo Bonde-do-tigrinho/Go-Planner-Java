@@ -21,4 +21,7 @@ public class Viagem {
     private String criadorViagemID; // ID do usuário que criou a viagem
     private List<Atividade> atividades;
     private List<String>   participantes;
+    public Object getId() {
+        return null;
+    }
 }
