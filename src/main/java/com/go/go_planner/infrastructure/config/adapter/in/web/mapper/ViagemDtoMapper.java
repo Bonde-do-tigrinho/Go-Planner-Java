@@ -8,11 +8,11 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 
+
 @Mapper(componentModel = "spring")
 public interface ViagemDtoMapper {
 
     @Mapping(target = "id", ignore = true)
-    // MapStruct lida com "false" como String e converte para boolean
     @Mapping(target = "favoritada", constant = "false")
     Viagem toDomain(CreateViagemRequestDTO requestDTO);
 }
