@@ -19,7 +19,6 @@ COPY src ./src
 # Compila a aplicação e gera o ficheiro .jar, saltando os testes.
 RUN ./mvnw package -DskipTests
 
-
 # --- ESTÁGIO 2: O "Runner" ---
 # Usamos uma imagem muito mais leve, apenas com o Java Runtime (JRE), para rodar a aplicação.
 FROM eclipse-temurin:22-jre-jammy
