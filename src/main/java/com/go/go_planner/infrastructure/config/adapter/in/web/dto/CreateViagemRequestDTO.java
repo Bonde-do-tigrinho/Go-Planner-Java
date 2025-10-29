@@ -1,24 +1,29 @@
-// src/main/java/com/go/go_planner/infrastructure/config/adapter/in/web/dto/CreateViagemRequestDTO.java
-
 package com.go.go_planner.infrastructure.config.adapter.in.web.dto;
 
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
+import java.time.LocalDateTime;
 
-import java.time.LocalDate;
+public record CreateViagemRequestDTO(
+        @NotBlank(message = "O título da viagem é obrigatório.")
+        String titulo,
 
-@Data
-public class CreateViagemRequestDTO {
+        @NotBlank(message = "O local de partida é obrigatório.")
+        String localPartida,
 
-    @NotBlank(message = "O destino é obrigatório.")
-    private String destino;
+        @NotBlank(message = "O local de destino é obrigatório.")
+        String localDestino,
 
-    @NotNull(message = "A data de início é obrigatória.")
-    private LocalDate dataInicio;
+        @NotNull(message = "A data e hora de partida são obrigatórias.")
+        @Future(message = "A data de partida deve ser no futuro.")
+        LocalDateTime dataPartida,
 
-    @NotNull(message = "A data de fim é obrigatória.")
-    private LocalDate dataFim;
+        @NotNull(message = "A data e hora de retorno são obrigatórias.")
+        @Future(message = "A data de retorno deve ser no futuro.")
+        LocalDateTime dataRetorno,
 
-    // Outros campos relevantes para a criação da viagem (ex: userId)
-}
+        String descricao, // Descrição pode ser opcional
+
+        String imagem // Imagem pode ser opcional
+) {}
