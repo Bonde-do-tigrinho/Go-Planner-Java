@@ -1,4 +1,4 @@
-package com.go.go_planner.application.port.service;
+package com.go.go_planner.application.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
