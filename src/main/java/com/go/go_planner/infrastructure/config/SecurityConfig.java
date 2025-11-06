@@ -27,7 +27,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/users/cadastrar",
                                                   "/api/users/login",
-                                                  "/api/users/confirm-account").permitAll()
+                                                  "/api/users/confirm-account",
+                                                  "/v3/api-docs/**",
+                                                  "/swagger-ui/**",
+                                "swagger-ui.html").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

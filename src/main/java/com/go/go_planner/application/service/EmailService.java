@@ -17,10 +17,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EmailService {
 
-    // Injeta o bean que criámos na BrevoConfig
     private final TransactionalEmailsApi brevoApi;
 
-    // Lê o seu e-mail de remetente verificado das configurações
     @Value("${brevo.sender.email}")
     private String senderEmail;
 

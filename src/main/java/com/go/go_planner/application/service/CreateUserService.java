@@ -4,7 +4,6 @@ import com.go.go_planner.application.port.in.CreateUserUseCase;
 import com.go.go_planner.application.port.out.UsuarioRepository;
 import com.go.go_planner.domain.model.StatusUsuario;
 import com.go.go_planner.domain.model.Usuario;
-import com.go.go_planner.application.port.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
