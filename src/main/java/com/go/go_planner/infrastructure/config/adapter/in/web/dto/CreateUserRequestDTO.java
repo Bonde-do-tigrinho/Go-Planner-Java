@@ -16,7 +16,7 @@ public record CreateUserRequestDTO(    // @NotBlank garante que o campo não sej
                                        @Size(min = 8, message = "A senha deve ter no mínimo 8 caracteres")
                                        String senha,
 
-                                       @NotBlank(message = "O cpf não pode ser vazio")
+                                       
                                        String cpf
 ) {
 }
