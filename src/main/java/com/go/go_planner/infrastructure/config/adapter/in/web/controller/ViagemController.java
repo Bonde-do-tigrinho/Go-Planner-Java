@@ -14,8 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import org.springframework.security.oauth2.jwt.JwtClaimNames;
-import org.springframework.security.oauth2.jwt.Jwt;
 
 import java.net.URI;
 import java.util.List;
@@ -39,15 +37,13 @@ public class ViagemController {
     @PostMapping
     public ResponseEntity<Viagem> createViagem(
             @Valid @RequestBody CreateViagemRequestDTO request,
-            // AQUI ESTÁ A CORREÇÃO: Troque o tipo para org.springframework.security.oauth2.jwt.Jwt
             @AuthenticationPrincipal Usuario principal
     ) {
         if (principal == null) {
             throw new IllegalStateException("Principal não pode ser nulo. Verifique o filtro de autenticação.");
         }
 
-        String criadorId = principal.getId(); // ou principal.getUsername() se o ID for o email, etc.
-        // O resto do seu código já está correto
+        String criadorId = principal.getId();
         CreateViagemUseCase.CreateViagemCommand command = viagemDtoMapper.toCommand(request, criadorId);
         Viagem viagemCriada = createViagemUseCase.createViagem(command);
 

@@ -49,8 +49,7 @@ public class EmailService {
 
             System.out.println("E-mail enviado com sucesso via API Brevo. Message ID: " + result.getMessageId());
 
-        } catch (ApiException e) { // <-- CAPTURE A EXCEÇÃO ESPECÍFICA
-            // 👇 ADICIONE ESTES LOGS PARA VER O ERRO DETALHADO 👇
+        } catch (ApiException e) {
             System.err.println("Erro da API do Brevo!");
             System.err.println("Código de Status HTTP: " + e.getCode());
             System.err.println("Corpo da Resposta (Erro): " + e.getResponseBody());

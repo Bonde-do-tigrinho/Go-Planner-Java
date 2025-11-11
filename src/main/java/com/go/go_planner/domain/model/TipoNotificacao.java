@@ -5,5 +5,4 @@ public enum TipoNotificacao {
     SOLICITACAO_VIAGEM,
     AMIZADE_ACEITA,
     VIAGEM_CONFIRMADA
-    // Adicione outros tipos conforme a sua aplicação crescer
 }

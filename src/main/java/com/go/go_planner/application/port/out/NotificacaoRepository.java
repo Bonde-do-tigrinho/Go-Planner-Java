@@ -9,9 +9,7 @@ import java.util.List;
 @Repository
 public interface NotificacaoRepository extends MongoRepository<Notificacao, String> {
 
-    // Encontra todas as notificações para um usuário, ordenadas pela mais recente
     List<Notificacao> findByDestinatarioIdOrderByDataCriacaoDesc(String destinatarioId);
 
-    // Conta quantas notificações não lidas um usuário tem (útil para o "sininho")
     long countByDestinatarioIdAndLidaIsFalse(String destinatarioId);
 }

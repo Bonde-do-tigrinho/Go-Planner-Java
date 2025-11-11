@@ -10,7 +10,7 @@ public class SolicitacaoViagem {
     private String id;
     private String solicitanteId;
     private String solicitadoId;
-    private String IDviagem; //nao sei se aqui realmente éo id
+    private String IDviagem;
     private StatusSolicitacao status;
     private Date dataCriacao;
 

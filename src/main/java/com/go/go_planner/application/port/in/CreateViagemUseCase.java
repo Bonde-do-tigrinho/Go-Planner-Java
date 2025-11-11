@@ -15,6 +15,6 @@ public interface CreateViagemUseCase {
             LocalDateTime dataRetorno,
             String descricao,
             String imagem,
-            String criadorId // O ID do usuário autenticado
+            String criadorId
     ) {}
 }

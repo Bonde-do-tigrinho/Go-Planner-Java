@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AceitarAmizadeService implements AceitarAmizadeUseCase {
 
-    // 👇 USE AS NOVAS INTERFACES AQUI 👇
     private final UsuarioRepository usuarioRepositoryAdapter;
     private final SolicitacaoAmizadeRepository solicitacaoAmizadeRepository;
 
@@ -39,6 +38,6 @@ public class AceitarAmizadeService implements AceitarAmizadeUseCase {
 
         usuarioRepositoryAdapter.save(usuarioAtual);
         usuarioRepositoryAdapter.save(amigoAprovado);
-        solicitacaoAmizadeRepository.save(solicitacao); // .save() também atualiza
+        solicitacaoAmizadeRepository.save(solicitacao);
     }
 }

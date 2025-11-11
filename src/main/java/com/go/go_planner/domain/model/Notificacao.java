@@ -16,13 +16,13 @@ public class Notificacao {
     @Id
     private String id;
     private String mensagem;
-    private String destinatarioId; // ID do usuário que recebe a notificação
-    private String referenciaId; // ID de referência (viagem, convite, etc.)
+    private String destinatarioId;
+    private String referenciaId;
     private String dataHora;
     private boolean lida = false;
-    private String viagemId; // ID da viagem associada, se aplicável
-    private String remetenteId; // ID do remetente da notificação
-    private TipoNotificacao tipo; // Tipo de notificação (convite, alerta, etc.)
+    private String viagemId;
+    private String remetenteId;
+    private TipoNotificacao tipo;
     private LocalDateTime dataCriacao = LocalDateTime.now();
 
     public Notificacao(String destinatarioId, TipoNotificacao tipo, String referenciaId, String mensagem) {

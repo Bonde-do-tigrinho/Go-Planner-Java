@@ -16,7 +16,6 @@ public class GetUsuarioByEmailService implements GetUsuarioByEmailUseCase {
 
     @Override
     public Usuario getUsuarioByEmail(String email) {
-        // A lógica de negócio delega a busca ao repositório
         return usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado com o email: " + email));
     }

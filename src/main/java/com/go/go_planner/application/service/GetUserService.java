@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class GetUserService implements GetUserUseCase {
 
-    private final UsuarioRepository userRepository; // O repositório é a porta de saída
+    private final UsuarioRepository userRepository;
 
     @Override
     public Usuario getUserById(String id) {

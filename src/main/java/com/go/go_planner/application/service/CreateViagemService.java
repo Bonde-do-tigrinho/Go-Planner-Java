@@ -1,7 +1,7 @@
 package com.go.go_planner.application.service;
 
 import com.go.go_planner.application.port.in.CreateViagemUseCase;
-import com.go.go_planner.application.port.out.ViagemRepository; // Supondo que você criou este repositório
+import com.go.go_planner.application.port.out.ViagemRepository;
 import com.go.go_planner.domain.model.Viagem;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,11 +29,9 @@ public class CreateViagemService implements CreateViagemUseCase {
         novaViagem.setDescricao(command.descricao());
         novaViagem.setImagem(command.imagem());
 
-        // 3. Preenchimento de campos gerados pelo sistema
-        novaViagem.setCriadorViagemID(command.criadorId()); // ID seguro, vindo do token
-        novaViagem.getParticipantesIds().add(command.criadorId()); // O criador é o primeiro participante
+        novaViagem.setCriadorViagemID(command.criadorId());
+        novaViagem.getParticipantesIds().add(command.criadorId());
 
-        // 4. Persistência
         return viagemRepository.save(novaViagem);
     }
 }

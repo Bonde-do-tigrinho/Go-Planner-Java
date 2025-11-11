@@ -7,7 +7,5 @@ import java.util.List;
 
 @Repository
 public interface ViagemRepository extends MongoRepository<Viagem, String> {
-
-    // Spring Data irá gerar a query `findByFavoritadaIsTrue()` para você.
     List<Viagem> findByFavoritadaIsTrue();
 }

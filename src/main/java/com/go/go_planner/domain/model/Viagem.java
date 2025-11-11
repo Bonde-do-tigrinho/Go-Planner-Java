@@ -15,7 +15,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "viagens") // Anotação para o MongoDB
+@Document(collection = "viagens")
 public class Viagem {
 
     @Id

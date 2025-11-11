@@ -13,10 +13,8 @@ public class UpdateUserService implements UpdateUserUseCase {
 
     private final UsuarioRepository usuarioRepository;
 
-    // A assinatura do método agora corresponde à interface.
     @Override
     public Usuario updateUser(UpdateUserCommand command) {
-        // 1. Busca o usuário existente usando o ID do Command.
         Usuario usuarioParaAtualizar = usuarioRepository.findById(command.userId())
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado para atualização."));
 
@@ -33,7 +31,6 @@ public class UpdateUserService implements UpdateUserUseCase {
             usuarioParaAtualizar.setFoto(command.foto());
         }
 
-        // 3. Salva o objeto modificado e retorna a versão atualizada.
         return usuarioRepository.save(usuarioParaAtualizar);
     }
 }

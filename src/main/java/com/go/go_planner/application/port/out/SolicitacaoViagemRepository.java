@@ -6,5 +6,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SolicitacaoViagemRepository extends MongoRepository<SolicitacaoAmizade, String> {
-    // Adicione métodos de busca personalizados aqui conforme necessário
 }

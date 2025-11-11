@@ -18,16 +18,13 @@ public class GetAmigosService implements GetAmigosUseCase {
 
     @Override
     public List<Usuario> getAmigos(String userId) {
-        // Encontra o usuário principal
         Usuario usuario = usuarioRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado."));
 
-        // Se a lista de IDs de amigos estiver vazia ou nula, retorna uma lista vazia
         if (usuario.getAmigos() == null || usuario.getAmigos().isEmpty()) {
             return Collections.emptyList();
         }
 
-        // Busca todos os amigos pelo seus IDs
         return usuarioRepository.findByIdIn(usuario.getAmigos());
     }
 }
