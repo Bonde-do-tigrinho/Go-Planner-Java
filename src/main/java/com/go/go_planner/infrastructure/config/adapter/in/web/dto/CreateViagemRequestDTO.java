@@ -1,9 +1,12 @@
 package com.go.go_planner.infrastructure.config.adapter.in.web.dto;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record CreateViagemRequestDTO(
         @NotBlank(message = "O título da viagem é obrigatório.")
@@ -23,7 +26,10 @@ public record CreateViagemRequestDTO(
         @Future(message = "A data de retorno deve ser no futuro.")
         LocalDateTime dataRetorno,
 
-        String descricao, // Descrição pode ser opcional
+        String descricao,
 
-        String imagem // Imagem pode ser opcional
+        String imagem,
+        @Valid
+        List<AtividadeRequestDTO> atividades,
+        List<@Email String> participantes
 ) {}
