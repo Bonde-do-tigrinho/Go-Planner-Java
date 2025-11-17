@@ -16,7 +16,7 @@ import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/amigos")
+@RequestMapping("/api/friends")
 @RequiredArgsConstructor
 public class AmigosController {
 

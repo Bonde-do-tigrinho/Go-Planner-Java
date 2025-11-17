@@ -4,6 +4,6 @@ public record UpdateUserRequestDTO(
         String id,
         String nome,
         String email,
-        String foto,
-        String cpf){
+        String senhaAtual,
+        String senhaNova){
 }

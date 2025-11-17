@@ -10,6 +10,6 @@ public interface UpdateUserUseCase {
     record UpdateUserCommand(String userId,
                              String nome,
                              String email,
-                             String cpf,
-                             String foto) {}
+                             String senhaAtual,
+                             String senhaNova) {}
 }

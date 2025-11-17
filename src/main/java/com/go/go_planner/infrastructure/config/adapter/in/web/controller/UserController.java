@@ -66,14 +66,14 @@ public class UserController {
     }
 
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable String id) {
+    @GetMapping("/me")
+    public ResponseEntity<UserResponseDTO> getUserById(@AuthenticationPrincipal Usuario usuarioLogado) {
         try {
-            Usuario usuarioEncontrado = getUserUseCase.getUserById(id);
+            Usuario usuarioEncontrado = getUserUseCase.getUserById(usuarioLogado.getId());
             UserResponseDTO response = userDtoMapper.toResponse(usuarioEncontrado);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            log.error("Usuário não encontrado com id {}: {}", id, e.getMessage());
+            log.error("Usuário não encontrado com id {}: {}", usuarioLogado.getId(), e.getMessage());
             return ResponseEntity.notFound().build();
         }
     }
@@ -88,8 +88,8 @@ public class UserController {
                 usuarioLogado.getId(),
                 request.nome(),
                 request.email(),
-                request.cpf(),
-                request.foto()
+                request.senhaAtual(),
+                request.senhaNova()
         );
 
         Usuario usuarioAtualizado = updateUserUseCase.updateUser(command);
@@ -110,7 +110,6 @@ public class UserController {
     @GetMapping("/by-email")
     public ResponseEntity<UserResponseDTO> getUsuarioByEmail(@RequestParam String email) {
         try {
-            // Delega a chamada para o Use Case e mapeia o resultado
             Usuario usuario = getUsuarioByEmailUseCase.getUsuarioByEmail(email);
             UserResponseDTO response = userDtoMapper.toResponse(usuario);
 
@@ -121,5 +120,3 @@ public class UserController {
         }
     }
 }
-
-
