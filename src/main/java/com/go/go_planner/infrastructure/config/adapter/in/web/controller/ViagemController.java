@@ -27,6 +27,7 @@ public class ViagemController {
     private final GetViagensFavoritadasUseCase getViagensFavoritadasUseCase;
     private final DeleteViagemUseCase deleteViagemUseCase;
     private final UpdateViagemUseCase updateViagemUseCase;
+    private final GetMinhasViagensUseCase getMinhasViagensUseCase;
     private final ViagemDtoMapper viagemDtoMapper;
 
     @GetMapping("/{id}")
@@ -83,5 +84,13 @@ public class ViagemController {
         Viagem viagemAtualizada = updateViagemUseCase.updateViagem(command);
 
         return ResponseEntity.ok(viagemAtualizada);
+    }
+
+    @GetMapping("/minhas-viagens")
+    public ResponseEntity<List<Viagem>> getMinhasViagens(@AuthenticationPrincipal Usuario principal) {
+
+        List<Viagem> viagens = getMinhasViagensUseCase.getMinhasViagens(principal.getId());
+
+        return ResponseEntity.ok(viagens);
     }
 }
