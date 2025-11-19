@@ -24,7 +24,6 @@ public interface CreateViagemUseCase {
 
     record AtividadeParaCriar(
             String titulo,
-            Date data,
-            String hora
+            LocalDateTime dataHora
     ) {}
 }

@@ -42,7 +42,7 @@ public class CreateViagemService implements CreateViagemUseCase {
         // 4. Mapeia e adiciona as ATIVIDADES
         if (command.atividades() != null && !command.atividades().isEmpty()) {
             List<Atividade> listaDeAtividades = command.atividades().stream()
-                    .map(dto -> new Atividade(dto.titulo(), dto.data(), dto.hora(), false))
+                    .map(dto -> new Atividade(dto.titulo(), dto.dataHora(), false))
                     .collect(Collectors.toList());
             novaViagem.setAtividades(listaDeAtividades);
         }

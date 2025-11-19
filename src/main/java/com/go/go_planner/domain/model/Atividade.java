@@ -14,7 +14,6 @@ import java.util.Date;
 @AllArgsConstructor
 public class  Atividade{
     private String titulo;
-    private Date data;
-    private String hora;
+    private LocalDateTime dataHora;
     private Boolean concluida = false;
 }
