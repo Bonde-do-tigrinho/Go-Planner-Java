@@ -32,6 +32,7 @@ public class ViagemController {
     private final UpdateViagemUseCase updateViagemUseCase;
     private final GetMinhasViagensUseCase getMinhasViagensUseCase;
     private final AdicionarAtividadeUseCase adicionarAtividadeUseCase;
+    private final DeleteAtividadeUseCase deleteAtividadeUseCase;
     private final ViagemDtoMapper viagemDtoMapper;
 
     @GetMapping("/{id}")
@@ -111,5 +112,25 @@ public class ViagemController {
         Viagem viagemAtualizada = adicionarAtividadeUseCase.addAtividade(command);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(viagemAtualizada);
+    }
+
+    @DeleteMapping("/{viagemId}/atividades/{atividadeId}")
+    public ResponseEntity<Void> deleteAtividade(
+            @PathVariable String viagemId,
+            @PathVariable String atividadeId,
+            @AuthenticationPrincipal Usuario principal
+    ) {
+        // Monta o Command
+        DeleteAtividadeUseCase.DeleteAtividadeCommand command = new DeleteAtividadeUseCase.DeleteAtividadeCommand(
+                viagemId,
+                atividadeId,
+                principal.getId()
+        );
+
+        // Chama o serviço
+        deleteAtividadeUseCase.deleteAtividade(command);
+
+        // Retorna 204 No Content (padrão para DELETE bem-sucedido)
+        return ResponseEntity.noContent().build();
     }
 }
