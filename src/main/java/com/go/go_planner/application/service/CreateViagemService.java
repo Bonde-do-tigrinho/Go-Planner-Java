@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,12 +21,10 @@ public class CreateViagemService implements CreateViagemUseCase {
 
     @Override
     public Viagem createViagem(CreateViagemCommand command) {
-        // 1. Validação de negócio
         if (command.dataRetorno().isBefore(command.dataPartida())) {
             throw new IllegalArgumentException("A data de retorno não pode ser anterior à data de partida.");
         }
 
-        // 2. Mapeamento do Command para o objeto de Domínio
         Viagem novaViagem = new Viagem();
         novaViagem.setTitulo(command.titulo());
         novaViagem.setLocalPartida(command.localPartida());
@@ -36,13 +35,12 @@ public class CreateViagemService implements CreateViagemUseCase {
         novaViagem.setImagem(command.imagem());
         novaViagem.setCriadorViagemID(command.criadorId());
 
-        // 3. Adiciona o criador como primeiro participante
         novaViagem.getParticipantesIds().add(command.criadorId());
 
-        // 4. Mapeia e adiciona as ATIVIDADES
         if (command.atividades() != null && !command.atividades().isEmpty()) {
             List<Atividade> listaDeAtividades = command.atividades().stream()
-                    .map(dto -> new Atividade(dto.titulo(), dto.dataHora(), false))
+                    .map(dto ->
+                            new Atividade(UUID.randomUUID().toString(),dto.titulo(), dto.dataHora(), false))
                     .collect(Collectors.toList());
             novaViagem.setAtividades(listaDeAtividades);
         }

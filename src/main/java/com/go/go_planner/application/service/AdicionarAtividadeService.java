@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.nio.file.AccessDeniedException;
 import java.time.format.DateTimeFormatter;
 import java.util.NoSuchElementException;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +38,7 @@ public class AdicionarAtividadeService implements AdicionarAtividadeUseCase {
         }
 
         Atividade novaAtividade = new Atividade();
+        novaAtividade.setId(UUID.randomUUID().toString());
         novaAtividade.setTitulo(command.titulo());
         novaAtividade.setDataHora(command.dataHora()); // Passa direto, sem conversão!
         novaAtividade.setConcluida(false);
