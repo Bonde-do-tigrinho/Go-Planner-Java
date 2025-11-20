@@ -1,12 +1,19 @@
 package com.go.go_planner.domain.model;
 
-import org.springframework.data.annotation.Id;
-import java.util.Date;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.time.LocalDateTime;
+
+@Getter // <--- Essencial para o .getId() funcionar
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Atividade {
-    @Id
-    private Long id;
+
+    private String id;
     private String titulo;
-    private Date data;
-    private Boolean concluida;
+    private LocalDateTime dataAtividade;
 }
