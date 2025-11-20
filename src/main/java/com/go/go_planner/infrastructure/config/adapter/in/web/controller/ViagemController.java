@@ -3,18 +3,21 @@ package com.go.go_planner.infrastructure.config.adapter.in.web.controller;
 import com.go.go_planner.application.port.in.*;
 import com.go.go_planner.domain.model.Usuario;
 import com.go.go_planner.domain.model.Viagem;
+import com.go.go_planner.infrastructure.config.adapter.in.web.dto.AtividadeRequestDTO;
 import com.go.go_planner.infrastructure.config.adapter.in.web.dto.CreateViagemRequestDTO;
 import com.go.go_planner.infrastructure.config.adapter.in.web.dto.UpdateViagemRequestDTO;
 import com.go.go_planner.infrastructure.config.adapter.in.web.mapper.ViagemDtoMapper;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 @RestController
@@ -28,6 +31,7 @@ public class ViagemController {
     private final DeleteViagemUseCase deleteViagemUseCase;
     private final UpdateViagemUseCase updateViagemUseCase;
     private final GetMinhasViagensUseCase getMinhasViagensUseCase;
+    private final AdicionarAtividadeUseCase adicionarAtividadeUseCase;
     private final ViagemDtoMapper viagemDtoMapper;
 
     @GetMapping("/{id}")
@@ -92,5 +96,20 @@ public class ViagemController {
         List<Viagem> viagens = getMinhasViagensUseCase.getMinhasViagens(principal.getId());
 
         return ResponseEntity.ok(viagens);
+    }
+
+    @PostMapping("/{viagemId}/atividades")
+    public ResponseEntity<Viagem> addAtividade(
+            @PathVariable String viagemId,
+            @Valid @RequestBody AtividadeRequestDTO requestDTO,
+            @AuthenticationPrincipal Usuario principal
+    ) throws AccessDeniedException {
+        AdicionarAtividadeUseCase.AddAtividadeCommand command = new AdicionarAtividadeUseCase.AddAtividadeCommand(
+                viagemId, principal.getId(), requestDTO.titulo(), requestDTO.dataHora()
+        );
+
+        Viagem viagemAtualizada = adicionarAtividadeUseCase.addAtividade(command);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(viagemAtualizada);
     }
 }

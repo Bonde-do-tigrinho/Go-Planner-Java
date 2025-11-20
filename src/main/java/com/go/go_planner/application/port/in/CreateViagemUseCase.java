@@ -2,6 +2,8 @@ package com.go.go_planner.application.port.in;
 
 import com.go.go_planner.domain.model.Viagem;
 import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.List;
 
 public interface CreateViagemUseCase {
 
@@ -15,6 +17,13 @@ public interface CreateViagemUseCase {
             LocalDateTime dataRetorno,
             String descricao,
             String imagem,
-            String criadorId
+            String criadorId,
+            List<AtividadeParaCriar> atividades,
+            List<String> emailsParaConvidar
+    ) {}
+
+    record AtividadeParaCriar(
+            String titulo,
+            LocalDateTime dataHora
     ) {}
 }

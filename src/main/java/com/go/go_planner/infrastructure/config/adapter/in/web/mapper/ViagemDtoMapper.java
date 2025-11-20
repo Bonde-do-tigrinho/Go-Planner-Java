@@ -10,6 +10,8 @@ import org.mapstruct.Mapping;
 public interface ViagemDtoMapper {
 
     @Mapping(target = "criadorId", source = "criadorId")
+    @Mapping(target = "emailsParaConvidar", source = "requestDTO.participantes")
+    @Mapping(target = "atividades", source = "requestDTO.atividades")
     CreateViagemCommand toCommand(CreateViagemRequestDTO requestDTO, String criadorId);
 
     @Mapping(target = "viagemId", source = "viagemId")
