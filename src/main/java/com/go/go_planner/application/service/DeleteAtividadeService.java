@@ -3,6 +3,7 @@ package com.go.go_planner.application.service;
 import com.go.go_planner.application.port.in.DeleteAtividadeUseCase;
 import com.go.go_planner.application.port.out.ViagemRepository;
 import com.go.go_planner.domain.model.Viagem;
+import com.go.go_planner.domain.model.ViagemRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,16 @@ public class DeleteAtividadeService implements DeleteAtividadeUseCase {
         // 1. Buscar a Viagem
         Viagem viagem = viagemRepository.findById(command.viagemId())
                 .orElseThrow(() -> new NoSuchElementException("Viagem não encontrada."));
+
+        boolean isCriador = viagem.getCriadorViagemID().equals(command.userId());
+
+        // Verifica se é participante com role EDITOR
+        boolean isEditor = viagem.getParticipantes().stream()
+                .anyMatch(p -> p.getUserId().equals(command.userId()) && p.getRole() == ViagemRole.EDITOR);
+
+        if (!isCriador && !isEditor) {
+            throw new AccessDeniedException("Você não tem permissão para adicionar atividades.");
+        }
 
         // 2. VERIFICAÇÃO DE SEGURANÇA (Só o dono pode modificar a viagem)
         if (!viagem.getCriadorViagemID().equals(command.userId())) {

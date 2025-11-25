@@ -5,6 +5,7 @@ import com.go.go_planner.application.port.out.UsuarioRepository;
 import com.go.go_planner.application.port.out.ViagemRepository;
 import com.go.go_planner.domain.model.Usuario;
 import com.go.go_planner.domain.model.Viagem;
+import com.go.go_planner.domain.model.ViagemRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -30,21 +31,30 @@ public class ConvidarParticipanteService implements ConvidarParticipanteUseCase 
             throw new AccessDeniedException("Apenas o criador da viagem pode convidar participantes.");
         }
 
-        // 3. Buscar o usuário que está sendo convidado
-        // (Neste MVP, o usuário já precisa ter conta no App)
+        // 3. Buscar o usuário
         Usuario convidado = usuarioRepository.findByEmail(command.emailConvidado())
                 .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado com o e-mail: " + command.emailConvidado()));
 
-        // 4. Verificar se ele já não está na viagem
-        if (viagem.getParticipantesIds().contains(convidado.getId())) {
+        // 4. CORREÇÃO AQUI: Verificar se ele já está na lista (usando Stream)
+        boolean usuarioJaParticipa = viagem.getParticipantes().stream()
+                .anyMatch(participante -> participante.getUserId().equals(convidado.getId()));
+
+        if (usuarioJaParticipa) {
             throw new IllegalArgumentException("Este usuário já é um participante desta viagem.");
         }
 
-        // 5. Adicionar o ID dele na lista
-        viagem.getParticipantesIds().add(convidado.getId());
+        // 5. CORREÇÃO AQUI: Criar o objeto Participante e adicionar
+        // Vamos definir 'LEITOR' como padrão. Depois o dono pode mudar para EDITOR se quiser.
+        Viagem.Participante novoParticipante = new Viagem.Participante(
+                convidado.getId(),
+                ViagemRole.LEITOR
+        );
+
+        viagem.getParticipantes().add(novoParticipante);
+
         viagemRepository.save(viagem);
 
-        // 6. Enviar E-mail de Notificação
+        // 6. Enviar E-mail
         enviarEmailBoasVindas(convidado.getEmail(), viagem.getTitulo(), viagem.getLocalDestino());
     }
 

@@ -31,6 +31,14 @@ public class Viagem {
 
     private Boolean favoritada = false;
     private List<Atividade> atividades = new ArrayList<>();
-    private List<String> participantesIds = new ArrayList<>();
+    private List<Participante> participantes = new ArrayList<>();
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Participante {
+        private String userId;
+        private ViagemRole role;
+    }
 
 }

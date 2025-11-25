@@ -4,6 +4,7 @@ import com.go.go_planner.application.port.in.ToggleAtividadeStatusUseCase;
 import com.go.go_planner.application.port.out.ViagemRepository;
 import com.go.go_planner.domain.model.Atividade;
 import com.go.go_planner.domain.model.Viagem;
+import com.go.go_planner.domain.model.ViagemRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,16 @@ public class ToggleAtividadeStatusService implements ToggleAtividadeStatusUseCas
         // 1. Buscar a Viagem
         Viagem viagem = viagemRepository.findById(command.viagemId())
                 .orElseThrow(() -> new NoSuchElementException("Viagem não encontrada."));
+
+        boolean isCriador = viagem.getCriadorViagemID().equals(command.userId());
+
+        // Verifica se é participante com role EDITOR
+        boolean isEditor = viagem.getParticipantes().stream()
+                .anyMatch(p -> p.getUserId().equals(command.userId()) && p.getRole() == ViagemRole.EDITOR);
+
+        if (!isCriador && !isEditor) {
+            throw new AccessDeniedException("Você não tem permissão para adicionar atividades.");
+        }
 
         // 2. VERIFICAÇÃO DE SEGURANÇA (Apenas o dono mexe na viagem)
         if (!viagem.getCriadorViagemID().equals(command.userId())) {

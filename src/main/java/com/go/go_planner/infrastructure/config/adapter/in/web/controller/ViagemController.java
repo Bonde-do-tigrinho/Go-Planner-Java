@@ -3,10 +3,7 @@ package com.go.go_planner.infrastructure.config.adapter.in.web.controller;
 import com.go.go_planner.application.port.in.*;
 import com.go.go_planner.domain.model.Usuario;
 import com.go.go_planner.domain.model.Viagem;
-import com.go.go_planner.infrastructure.config.adapter.in.web.dto.AtividadeRequestDTO;
-import com.go.go_planner.infrastructure.config.adapter.in.web.dto.ConvidarParticipanteRequestDTO;
-import com.go.go_planner.infrastructure.config.adapter.in.web.dto.CreateViagemRequestDTO;
-import com.go.go_planner.infrastructure.config.adapter.in.web.dto.UpdateViagemRequestDTO;
+import com.go.go_planner.infrastructure.config.adapter.in.web.dto.*;
 import com.go.go_planner.infrastructure.config.adapter.in.web.mapper.ViagemDtoMapper;
 
 import jakarta.validation.Valid;
@@ -38,6 +35,8 @@ public class ViagemController {
     private final GetViagensFavoritasUseCase getViagensFavoritasUseCase;
     private final ToggleAtividadeStatusUseCase toggleAtividadeStatusUseCase;
     private final ConvidarParticipanteUseCase convidarParticipanteUseCase;
+    private final UpdateParticipanteRoleUseCase updateParticipanteRoleUseCase;
+    private final GetViagensParticipandoUseCase getViagensParticipandoUseCase;
     private final ViagemDtoMapper viagemDtoMapper;
 
     @GetMapping("/{id}")
@@ -189,5 +188,33 @@ public class ViagemController {
 
         // Retorna 204 No Content (ou 200 OK se preferir)
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{viagemId}/participantes/{participanteId}/role")
+    public ResponseEntity<Void> updateRole(
+            @PathVariable String viagemId,
+            @PathVariable String participanteId,
+            @RequestBody @Valid UpdateRoleRequestDTO request,
+            @AuthenticationPrincipal Usuario principal
+    ) {
+        var command = new UpdateParticipanteRoleUseCase.UpdateRoleCommand(
+                viagemId,
+                principal.getId(), // ID de quem está logado (tem que ser o dono)
+                participanteId,    // ID de quem vai virar Editor/Leitor
+                request.role()
+        );
+
+        updateParticipanteRoleUseCase.execute(command);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/participando")
+    public ResponseEntity<List<Viagem>> getViagensParticipando(
+            @AuthenticationPrincipal Usuario principal
+    ) {
+        List<Viagem> viagens = getViagensParticipandoUseCase.execute(principal.getId());
+
+        return ResponseEntity.ok(viagens);
     }
 }
