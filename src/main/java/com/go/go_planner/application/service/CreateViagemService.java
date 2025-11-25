@@ -4,6 +4,7 @@ import com.go.go_planner.application.port.in.CreateViagemUseCase;
 import com.go.go_planner.application.port.out.ViagemRepository;
 import com.go.go_planner.domain.model.Atividade;
 import com.go.go_planner.domain.model.Viagem;
+import com.go.go_planner.domain.model.ViagemRole; // ⚠️ Importante importar o Enum
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,6 @@ public class CreateViagemService implements CreateViagemUseCase {
 
     private final ViagemRepository viagemRepository;
     private final EmailService emailService;
-
 
     @Override
     public Viagem createViagem(CreateViagemCommand command) {
@@ -35,19 +35,31 @@ public class CreateViagemService implements CreateViagemUseCase {
         novaViagem.setImagem(command.imagem());
         novaViagem.setCriadorViagemID(command.criadorId());
 
-        novaViagem.getParticipantesIds().add(command.criadorId());
+        // 👇 CORREÇÃO AQUI 👇
+        // Criamos um objeto Participante com o ID do criador e o papel EDITOR
+        novaViagem.getParticipantes().add(
+                new Viagem.Participante(command.criadorId(), ViagemRole.EDITOR)
+        );
 
+        // Mapeamento das Atividades (Isso já estava correto no seu código)
         if (command.atividades() != null && !command.atividades().isEmpty()) {
             List<Atividade> listaDeAtividades = command.atividades().stream()
-                    .map(dto ->
-                            new Atividade(UUID.randomUUID().toString(),dto.titulo(), dto.dataHora(), false))
+                    .map(dto -> new Atividade(
+                            UUID.randomUUID().toString(), // Gera ID único para atividade
+                            dto.titulo(),
+                            dto.dataHora(),
+                            false
+                    ))
                     .collect(Collectors.toList());
             novaViagem.setAtividades(listaDeAtividades);
         }
 
-        // 5. Persiste a viagem (Necessário para ter o ID da viagem)
+        // Persiste a viagem
         Viagem viagemSalva = viagemRepository.save(novaViagem);
 
+        // (Opcional) Se você quiser processar os convites por e-mail aqui também,
+        // precisaria reinserir a lógica de chamar o UsuarioRepository, etc.
+        // Mas para criar a viagem, o código acima já basta.
 
         return viagemSalva;
     }
