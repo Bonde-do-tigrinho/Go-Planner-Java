@@ -19,6 +19,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.nio.file.AccessDeniedException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/trips")
@@ -27,12 +28,13 @@ public class ViagemController {
 
     private final CreateViagemUseCase createViagemUseCase;
     private final GetViagemUseCase getViagemUseCase;
-    private final GetViagensFavoritadasUseCase getViagensFavoritadasUseCase;
     private final DeleteViagemUseCase deleteViagemUseCase;
     private final UpdateViagemUseCase updateViagemUseCase;
     private final GetMinhasViagensUseCase getMinhasViagensUseCase;
     private final AdicionarAtividadeUseCase adicionarAtividadeUseCase;
     private final DeleteAtividadeUseCase deleteAtividadeUseCase;
+    private final ToggleViagemFavoritaUseCase toggleViagemFavoritaUseCase;
+    private final GetViagensFavoritasUseCase getViagensFavoritasUseCase;
     private final ViagemDtoMapper viagemDtoMapper;
 
     @GetMapping("/{id}")
@@ -61,12 +63,6 @@ public class ViagemController {
                 .toUri();
 
         return ResponseEntity.created(location).body(viagemCriada);
-    }
-
-    @GetMapping("/favoritas")
-    public ResponseEntity<List<Viagem>> getViagensFavoritas() {
-        List<Viagem> viagensFavoritas = getViagensFavoritadasUseCase.getViagensFavoritadas();
-        return ResponseEntity.ok(viagensFavoritas);
     }
 
     @DeleteMapping("/{id}")
@@ -132,5 +128,27 @@ public class ViagemController {
 
         // Retorna 204 No Content (padrão para DELETE bem-sucedido)
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}/favorito")
+    public ResponseEntity<Map<String, Boolean>> toggleFavorito(
+            @PathVariable String id,
+            @AuthenticationPrincipal Usuario principal
+    ) {
+        ToggleViagemFavoritaUseCase.ToggleFavoritoCommand command =
+                new ToggleViagemFavoritaUseCase.ToggleFavoritoCommand(id, principal.getId());
+
+        boolean favoritado = toggleViagemFavoritaUseCase.toggleFavorito(command);
+
+        return ResponseEntity.ok(Map.of("favoritado", favoritado));
+    }
+
+    @GetMapping("/favoritas")
+    public ResponseEntity<List<Viagem>> getMinhasViagensFavoritas(
+            @AuthenticationPrincipal Usuario principal
+    ) {
+        List<Viagem> favoritas = getViagensFavoritasUseCase.execute(principal.getId());
+
+        return ResponseEntity.ok(favoritas);
     }
 }

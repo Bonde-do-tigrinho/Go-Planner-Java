@@ -33,6 +33,7 @@ public class Usuario implements UserDetails {
     private StatusUsuario status = StatusUsuario.PENDENTE_CONFIRMACAO;
     private List<String> amigos = new ArrayList<>();
     private List<Notificacao> notificacoes = new ArrayList<>();
+    private List<String> viagensFavoritasIds = new ArrayList<>();
 
     public List<String> getAmigos() {
         if (this.amigos == null) { this.amigos = new ArrayList<>(); }

@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface ViagemRepository extends MongoRepository<Viagem, String> {
     List<Viagem> findByFavoritadaIsTrue();
     List<Viagem> findByCriadorViagemID(String criadorId);
+    List<Viagem> findAllById(Iterable<String> ids);
 }
