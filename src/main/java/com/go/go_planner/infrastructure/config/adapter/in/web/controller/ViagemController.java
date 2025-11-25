@@ -4,6 +4,7 @@ import com.go.go_planner.application.port.in.*;
 import com.go.go_planner.domain.model.Usuario;
 import com.go.go_planner.domain.model.Viagem;
 import com.go.go_planner.infrastructure.config.adapter.in.web.dto.AtividadeRequestDTO;
+import com.go.go_planner.infrastructure.config.adapter.in.web.dto.ConvidarParticipanteRequestDTO;
 import com.go.go_planner.infrastructure.config.adapter.in.web.dto.CreateViagemRequestDTO;
 import com.go.go_planner.infrastructure.config.adapter.in.web.dto.UpdateViagemRequestDTO;
 import com.go.go_planner.infrastructure.config.adapter.in.web.mapper.ViagemDtoMapper;
@@ -35,6 +36,8 @@ public class ViagemController {
     private final DeleteAtividadeUseCase deleteAtividadeUseCase;
     private final ToggleViagemFavoritaUseCase toggleViagemFavoritaUseCase;
     private final GetViagensFavoritasUseCase getViagensFavoritasUseCase;
+    private final ToggleAtividadeStatusUseCase toggleAtividadeStatusUseCase;
+    private final ConvidarParticipanteUseCase convidarParticipanteUseCase;
     private final ViagemDtoMapper viagemDtoMapper;
 
     @GetMapping("/{id}")
@@ -150,5 +153,41 @@ public class ViagemController {
         List<Viagem> favoritas = getViagensFavoritasUseCase.execute(principal.getId());
 
         return ResponseEntity.ok(favoritas);
+    }
+
+    @PatchMapping("/{viagemId}/atividades/{atividadeId}/concluir")
+    public ResponseEntity<Viagem> toggleStatusAtividade(
+            @PathVariable String viagemId,
+            @PathVariable String atividadeId,
+            @AuthenticationPrincipal Usuario principal
+    ) {
+        var command = new ToggleAtividadeStatusUseCase.ToggleAtividadeCommand(
+                viagemId,
+                atividadeId,
+                principal.getId()
+        );
+
+        Viagem viagemAtualizada = toggleAtividadeStatusUseCase.execute(command);
+
+        // Retorna a viagem atualizada (com a atividade já com o novo status)
+        return ResponseEntity.ok(viagemAtualizada);
+    }
+
+    @PostMapping("/{viagemId}/convidar")
+    public ResponseEntity<Void> convidarParticipante(
+            @PathVariable String viagemId,
+            @Valid @RequestBody ConvidarParticipanteRequestDTO request,
+            @AuthenticationPrincipal Usuario principal
+    ) {
+        var command = new ConvidarParticipanteUseCase.ConvidarCommand(
+                viagemId,
+                principal.getId(),
+                request.email()
+        );
+
+        convidarParticipanteUseCase.convidar(command);
+
+        // Retorna 204 No Content (ou 200 OK se preferir)
+        return ResponseEntity.noContent().build();
     }
 }
