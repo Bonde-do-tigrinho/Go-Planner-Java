@@ -67,10 +67,10 @@ public class UserController {
 
 
     @GetMapping("/me")
-    public ResponseEntity<UserResponseDTO> getUserById(@AuthenticationPrincipal Usuario usuarioLogado) {
+    public ResponseEntity<UserResponseInfoDTO> getUserById(@AuthenticationPrincipal Usuario usuarioLogado) {
         try {
             Usuario usuarioEncontrado = getUserUseCase.getUserById(usuarioLogado.getId());
-            UserResponseDTO response = userDtoMapper.toResponse(usuarioEncontrado);
+            UserResponseInfoDTO response = userDtoMapper.toResponseInfo(usuarioEncontrado);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             log.error("Usuário não encontrado com id {}: {}", usuarioLogado.getId(), e.getMessage());

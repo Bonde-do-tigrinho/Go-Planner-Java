@@ -5,6 +5,7 @@ import com.go.go_planner.domain.model.Usuario;
 import com.go.go_planner.infrastructure.config.adapter.in.web.dto.CreateUserRequestDTO;
 import com.go.go_planner.infrastructure.config.adapter.in.web.dto.LoginRequestDTO;
 import com.go.go_planner.infrastructure.config.adapter.in.web.dto.UserResponseDTO;
+import com.go.go_planner.infrastructure.config.adapter.in.web.dto.UserResponseInfoDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -19,4 +20,5 @@ public interface UserDtoMapper {
     Usuario toDomain(CreateUserRequestDTO request);
     LoginUserUseCase.LoginUserCommand toLoginCommand(LoginRequestDTO request);
     UserResponseDTO toResponse(Usuario usuario);
+    UserResponseInfoDTO toResponseInfo(Usuario usuario);
 }
