@@ -52,7 +52,7 @@ public class CreateViagemService implements CreateViagemUseCase {
                             dto.dataHora(),
                             false
                     ))
-                    .collect(Collectors.toList());
+                    .toList();
             novaViagem.setAtividades(listaDeAtividades);
         }
 
@@ -67,13 +67,10 @@ public class CreateViagemService implements CreateViagemUseCase {
 
     private void processarConvites(Viagem viagem, List<String> emails, String criadorId) {
         for (String email : emails) {
-            // Busca o usuário pelo e-mail
             Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(email);
 
             if (usuarioOpt.isEmpty()) {
-                // Decisão de negócio: Se o usuário não existe no app, ignoramos ou logamos?
-                // Por enquanto vamos apenas ignorar para não quebrar a criação da viagem.
-                continue;
+                throw new IllegalArgumentException("Usuário com email " + email + " não encontrado.");
             }
 
             Usuario convidado = usuarioOpt.get();

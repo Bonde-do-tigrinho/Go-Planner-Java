@@ -45,7 +45,7 @@ public class EmailService {
 
             CreateSmtpEmail result = brevoApi.sendTransacEmail(email);
 
-            System.out.println("E-mail enviado com sucesso via API Brevo. Message ID: " + result.getMessageId());
+            log.error("E-mail enviado com sucesso via API Brevo. Message ID: " + result.getMessageId());
 
         } catch (ApiException e) {
             log.error("Erro da API do Brevo!");
