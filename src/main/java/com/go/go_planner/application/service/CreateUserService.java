@@ -4,6 +4,7 @@ import com.go.go_planner.application.port.in.CreateUserUseCase;
 import com.go.go_planner.application.port.out.UsuarioRepository;
 import com.go.go_planner.domain.model.StatusUsuario;
 import com.go.go_planner.domain.model.Usuario;
+import com.go.go_planner.infrastructure.config.utils.CodeGeneratorUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,10 +30,9 @@ public class CreateUserService implements CreateUserUseCase {
         String encodedPassword = passwordEncoder.encode(usuario.getSenha());
         usuario.setSenha(encodedPassword);
 
-        String codigo = new DecimalFormat("000000").format(new Random().nextInt(999999));
-
+        String codigo = CodeGeneratorUtil.generateSixDigitCode();
         usuario.setCodigoConfirmacao(codigo);
-        usuario.setDataExpiracaoCodigo(LocalDateTime.now().plusMinutes(15)); // Expira em 15 minutos
+        usuario.setDataExpiracaoCodigo(LocalDateTime.now().plusMinutes(15));
         usuario.setStatus(StatusUsuario.PENDENTE_CONFIRMACAO);
 
         String subject = "Seu Código de Confirmação - Go Planner";

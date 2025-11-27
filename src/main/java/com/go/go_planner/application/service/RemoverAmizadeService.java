@@ -13,7 +13,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RemoverAmizadeService implements RemoverAmizadeUseCase {
 
-    @Autowired
     private final UsuarioRepository usuarioRepository;
 
     @Override
