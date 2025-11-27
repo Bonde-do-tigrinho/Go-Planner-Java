@@ -51,10 +51,8 @@ public class EmailService {
             log.error("Erro da API do Brevo!");
             log.error("Código de Status HTTP: " + e.getCode());
             log.error("Corpo da Resposta (Erro): " + e.getResponseBody());
-            e.printStackTrace();
         } catch (Exception e) {
             log.error("Ocorreu um erro geral ao enviar e-mail: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 }
