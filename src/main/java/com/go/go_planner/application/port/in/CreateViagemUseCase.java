@@ -2,7 +2,6 @@ package com.go.go_planner.application.port.in;
 
 import com.go.go_planner.domain.model.Viagem;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 public interface CreateViagemUseCase {

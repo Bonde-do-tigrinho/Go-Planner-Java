@@ -4,7 +4,6 @@ import com.go.go_planner.domain.model.Viagem;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface ViagemRepository extends MongoRepository<Viagem, String> {

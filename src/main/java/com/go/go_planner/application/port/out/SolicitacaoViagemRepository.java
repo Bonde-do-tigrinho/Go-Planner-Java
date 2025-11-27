@@ -1,6 +1,5 @@
 package com.go.go_planner.application.port.out;
 
-import com.go.go_planner.domain.model.SolicitacaoAmizade;
 import com.go.go_planner.domain.model.SolicitacaoViagem;
 import com.go.go_planner.domain.model.StatusSolicitacao;
 import org.springframework.data.mongodb.repository.MongoRepository;

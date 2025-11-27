@@ -4,7 +4,6 @@ import com.go.go_planner.domain.model.Viagem;
 
 import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 public interface AdicionarAtividadeUseCase {
 
