@@ -27,7 +27,6 @@ public class UpdateUserService implements UpdateUserUseCase {
             usuarioParaAtualizar.setEmail(command.email());
         }
         if (StringUtils.hasText(command.senhaAtual())) {
-            // O método matches verifica: (senha que o usuário digitou, senha criptografada no banco)
             if (!passwordEncoder.matches(command.senhaAtual(), usuarioParaAtualizar.getSenha())) {
                 throw new IllegalArgumentException("A senha atual informada está incorreta.");
             }

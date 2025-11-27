@@ -1,5 +1,6 @@
 package com.go.go_planner.infrastructure.config.adapter.in.web.controller;
 
+import com.go.go_planner.application.port.in.GetMinhasNotificacoesUseCase;
 import com.go.go_planner.application.port.out.NotificacaoRepository;
 import com.go.go_planner.domain.model.Notificacao;
 import com.go.go_planner.domain.model.Usuario;
@@ -15,15 +16,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NotificationController {
 
+    private final GetMinhasNotificacoesUseCase getMinhasNotificacoesUseCase;
     private final NotificacaoRepository notificacaoRepository;
 
-    @GetMapping("/minhasNotificacoes") // Uma rota mais segura como "/minhas" ou "/me"
-    public ResponseEntity<List<Notificacao>> getMinhasNotificacoes(
-            @AuthenticationPrincipal Usuario usuarioLogado // Injeta o utilizador autenticado
+    @GetMapping("/minhas-notificacoes")
+    public ResponseEntity<List<Notificacao>> getMinhasNotificacoesNaoLidas(
+            @AuthenticationPrincipal Usuario usuarioLogado
     ) {
-        // Usa o ID do utilizador logado (vindo do token) para a busca
-        var notifications = notificacaoRepository.findByDestinatarioIdOrderByDataCriacaoDesc(usuarioLogado.getId());
+        List<Notificacao> notificacoes = getMinhasNotificacoesUseCase.execute(usuarioLogado.getId());
 
-        return ResponseEntity.ok(notifications);
+        return ResponseEntity.ok(notificacoes);
     }
 }

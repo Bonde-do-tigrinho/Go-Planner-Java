@@ -25,7 +25,6 @@ public class ToggleAtividadeStatusService implements ToggleAtividadeStatusUseCas
 
         boolean isCriador = viagem.getCriadorViagemID().equals(command.userId());
 
-        // Verifica se é participante com role EDITOR
         boolean isEditor = viagem.getParticipantes().stream()
                 .anyMatch(p -> p.getUserId().equals(command.userId()) && p.getRole() == ViagemRole.EDITOR);
 
@@ -33,23 +32,18 @@ public class ToggleAtividadeStatusService implements ToggleAtividadeStatusUseCas
             throw new AccessDeniedException("Você não tem permissão para adicionar atividades.");
         }
 
-        // 2. VERIFICAÇÃO DE SEGURANÇA (Apenas o dono mexe na viagem)
         if (!viagem.getCriadorViagemID().equals(command.userId())) {
             throw new AccessDeniedException("Usuário não autorizado a modificar esta viagem.");
         }
 
-        // 3. Encontrar a Atividade específica na lista
         Atividade atividadeAlvo = viagem.getAtividades().stream()
                 .filter(a -> a.getId().equals(command.atividadeId()))
                 .findFirst()
                 .orElseThrow(() -> new NoSuchElementException("Atividade não encontrada com ID: " + command.atividadeId()));
 
-        // 4. Inverter o status (Toggle)
-        // Se era false vira true, se era true vira false
         boolean novoStatus = !Boolean.TRUE.equals(atividadeAlvo.getConcluida());
         atividadeAlvo.setConcluida(novoStatus);
 
-        // 5. Salvar a Viagem inteira
         return viagemRepository.save(viagem);
     }
 }

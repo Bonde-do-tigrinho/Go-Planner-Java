@@ -22,13 +22,11 @@ public class AdicionarAtividadeService implements AdicionarAtividadeUseCase {
 
     @Override
     public Viagem addAtividade(AddAtividadeCommand command) throws AccessDeniedException {
-        // 1. Buscar a viagem
         Viagem viagem = viagemRepository.findById(command.viagemId())
                 .orElseThrow(() -> new NoSuchElementException("Viagem não encontrada com o ID: " + command.viagemId()));
 
         boolean isCriador = viagem.getCriadorViagemID().equals(command.userId());
 
-        // Verifica se é participante com role EDITOR
         boolean isEditor = viagem.getParticipantes().stream()
                 .anyMatch(p -> p.getUserId().equals(command.userId()) && p.getRole() == ViagemRole.EDITOR);
 
@@ -36,13 +34,10 @@ public class AdicionarAtividadeService implements AdicionarAtividadeUseCase {
             throw new AccessDeniedException("Você não tem permissão para adicionar atividades.");
         }
 
-        // 2. VERIFICAÇÃO DE SEGURANÇA (Só o dono pode adicionar)
         if (!viagem.getCriadorViagemID().equals(command.userId())) {
             throw new AccessDeniedException("Usuário não autorizado a adicionar atividades a esta viagem.");
         }
 
-        // 3. REGRA DE NEGÓCIO: Validar datas
-        // A atividade não pode ser antes do início nem depois do fim da viagem
         if (command.dataHora().isBefore(viagem.getDataPartida()) ||
                 command.dataHora().isAfter(viagem.getDataRetorno())) {
             throw new IllegalArgumentException("A data da atividade deve estar dentro do período da viagem.");

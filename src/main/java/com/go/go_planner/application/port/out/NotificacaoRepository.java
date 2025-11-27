@@ -10,4 +10,6 @@ import java.util.List;
 public interface NotificacaoRepository extends MongoRepository<Notificacao, String> {
 
     List<Notificacao> findByDestinatarioIdOrderByDataCriacaoDesc(String destinatarioId);
+    List<Notificacao> findByReferenciaId(String referenciaId);
+    List<Notificacao> findByDestinatarioIdAndLidaFalseOrderByDataCriacaoDesc(String destinatarioId);
 }

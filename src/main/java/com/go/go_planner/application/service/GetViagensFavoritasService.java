@@ -21,22 +21,17 @@ public class GetViagensFavoritasService implements GetViagensFavoritasUseCase {
 
     @Override
     public List<Viagem> execute(String userId) {
-        // 1. Buscar o usuário para acessar a lista de IDs favoritos
         Usuario usuario = usuarioRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado."));
 
         List<String> idsFavoritos = usuario.getViagensFavoritasIds();
 
-        // 2. Se a lista estiver vazia, retorna logo uma lista vazia (evita ir ao banco à toa)
         if (idsFavoritos == null || idsFavoritos.isEmpty()) {
             return Collections.emptyList();
         }
 
-        // 3. Busca todas as viagens cujos IDs estão na lista
         List<Viagem> viagensFavoritas = viagemRepository.findAllById(idsFavoritos);
 
-        // 4. (Opcional) Ajustar o campo 'favoritada' para true no retorno
-        // Isso ajuda o frontend a saber que elas já devem vir marcadas com o coraçãozinho preenchido
         viagensFavoritas.forEach(v -> v.setFavoritada(true));
 
         return viagensFavoritas;

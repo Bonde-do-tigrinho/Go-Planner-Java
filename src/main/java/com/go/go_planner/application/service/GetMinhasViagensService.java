@@ -16,7 +16,6 @@ public class GetMinhasViagensService implements GetMinhasViagensUseCase {
 
     @Override
     public List<Viagem> getMinhasViagens(String userId) {
-        // A lógica é simplesmente chamar o método do repositório
         return viagemRepository.findByCriadorViagemID(userId);
     }
 }

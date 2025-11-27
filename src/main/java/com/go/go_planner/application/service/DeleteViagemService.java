@@ -19,7 +19,6 @@ public class DeleteViagemService implements DeleteViagemUseCase {
 
     @Override
     public void deleteViagem(String viagemId, String userId) {
-        // 1. Buscar a viagem no banco de dados
         Viagem viagem = viagemRepository.findById(viagemId)
                 .orElseThrow(() -> new NoSuchElementException("Viagem não encontrada com o ID: " + viagemId));
 

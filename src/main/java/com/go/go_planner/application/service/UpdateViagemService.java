@@ -19,24 +19,19 @@ public class UpdateViagemService implements UpdateViagemUseCase {
 
     @Override
     public Viagem updateViagem(UpdateViagemCommand command) {
-        // 1. Buscar a viagem original
         Viagem viagemOriginal = viagemRepository.findById(command.viagemId())
                 .orElseThrow(() -> new NoSuchElementException("Viagem não encontrada: " + command.viagemId()));
 
-        // 2. VERIFICAÇÃO DE SEGURANÇA
         if (!viagemOriginal.getCriadorViagemID().equals(command.userId())) {
             throw new AccessDeniedException("Usuário não autorizado a modificar esta viagem.");
         }
 
-        // 3. Lógica de atualização parcial (patch)
-        // Atualiza apenas os campos que foram fornecidos (não são nulos)
         Optional.ofNullable(command.titulo()).ifPresent(viagemOriginal::setTitulo);
         Optional.ofNullable(command.localPartida()).ifPresent(viagemOriginal::setLocalPartida);
         Optional.ofNullable(command.localDestino()).ifPresent(viagemOriginal::setLocalDestino);
         Optional.ofNullable(command.descricao()).ifPresent(viagemOriginal::setDescricao);
         Optional.ofNullable(command.imagem()).ifPresent(viagemOriginal::setImagem);
 
-        // 4. Lógica de validação de datas (um pouco mais complexa)
         LocalDateTime dataPartidaNova = command.dataPartida() != null ? command.dataPartida() : viagemOriginal.getDataPartida();
         LocalDateTime dataRetornoNova = command.dataRetorno() != null ? command.dataRetorno() : viagemOriginal.getDataRetorno();
 

@@ -15,7 +15,6 @@ public class GetViagensParticipandoService implements GetViagensParticipandoUseC
 
     @Override
     public List<Viagem> execute(String userId) {
-        // Busca as viagens onde eu sou um participante (Leitor ou Editor)
         return viagemRepository.findByParticipantesUserId(userId);
     }
 }

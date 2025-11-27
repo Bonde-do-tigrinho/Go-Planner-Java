@@ -18,12 +18,9 @@ public class ToggleViagemFavoritaService implements ToggleViagemFavoritaUseCase 
 
     @Override
     public boolean toggleFavorito(ToggleFavoritoCommand command) {
-        // 1. Buscar o Usuário (para atualizar a lista dele)
         Usuario usuario = usuarioRepository.findById(command.userId())
                 .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado."));
 
-        // 2. Verificar se a Viagem realmente existe (Integridade de dados)
-        // Não queremos favoritar um ID que não existe no banco.
         if (!viagemRepository.existsById(command.viagemId())) {
             throw new NoSuchElementException("Viagem não encontrada com ID: " + command.viagemId());
         }
@@ -31,18 +28,14 @@ public class ToggleViagemFavoritaService implements ToggleViagemFavoritaUseCase 
         String idViagem = command.viagemId();
         boolean isFavoritadoAgora;
 
-        // 3. Lógica de Toggle (Adicionar ou Remover)
         if (usuario.getViagensFavoritasIds().contains(idViagem)) {
-            // Se já tem, REMOVE
             usuario.getViagensFavoritasIds().remove(idViagem);
             isFavoritadoAgora = false;
         } else {
-            // Se não tem, ADICIONA
             usuario.getViagensFavoritasIds().add(idViagem);
             isFavoritadoAgora = true;
         }
 
-        // 4. Salvar o Usuário atualizado
         usuarioRepository.save(usuario);
 
         return isFavoritadoAgora;

@@ -35,7 +35,6 @@ public class CreateUserService implements CreateUserUseCase {
         usuario.setDataExpiracaoCodigo(LocalDateTime.now().plusMinutes(15)); // Expira em 15 minutos
         usuario.setStatus(StatusUsuario.PENDENTE_CONFIRMACAO);
 
-        // Dispara o envio de e-mail (que vai rodar em background)
         String subject = "Seu Código de Confirmação - Go Planner";
         String text = "Olá, " + usuario.getNome() + "!\n\n"
                 + "Bem-vindo ao Go Planner. Use o código abaixo para ativar sua conta:\n\n"
