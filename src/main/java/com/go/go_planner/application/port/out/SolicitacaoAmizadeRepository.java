@@ -1,6 +1,5 @@
 package com.go.go_planner.application.port.out;
 
-import com.go.go_planner.domain.model.Notificacao;
 import com.go.go_planner.domain.model.SolicitacaoAmizade;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;

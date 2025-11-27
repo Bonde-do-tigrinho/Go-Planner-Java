@@ -45,7 +45,7 @@ public class UserController {
             return ResponseEntity.created(location).body(response);
         } catch (Exception e) {
             log.error("Erro ao criar usuário: {}", e.getMessage());
-            throw new RuntimeException(e);
+            return ResponseEntity.badRequest().build();
         }
     }
 

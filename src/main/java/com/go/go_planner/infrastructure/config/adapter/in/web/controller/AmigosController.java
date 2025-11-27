@@ -29,7 +29,7 @@ public class AmigosController {
             List<Usuario> amigos = getAmigosUseCase.getAmigos(userId);
             List<UserResponseDTO> response = amigos.stream()
                     .map(userDtoMapper::toResponse)
-                    .collect(Collectors.toList());
+                    .toList();
             return ResponseEntity.ok(response);
         } catch (NoSuchElementException e) {
             return ResponseEntity.notFound().build();

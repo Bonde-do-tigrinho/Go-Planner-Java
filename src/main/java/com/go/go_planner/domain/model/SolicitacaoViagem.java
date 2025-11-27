@@ -16,7 +16,7 @@ public class SolicitacaoViagem {
     private String id;
     private String solicitanteId;
     private String solicitadoId;
-    private String IDviagem;
+    private String idViagem;
     private StatusSolicitacao status;
     private Date dataCriacao;
 

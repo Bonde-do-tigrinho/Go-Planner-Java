@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class LoginUserService implements LoginUserUseCase {
     private final AuthenticationManager authenticationManager;
-    private final UsuarioRepository UsuarioRepository;
+    private final UsuarioRepository usuarioRepository;
     private final JwtService jwtService;
 
     @Override
@@ -21,7 +21,7 @@ public class LoginUserService implements LoginUserUseCase {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(command.email(), command.senha())
         );
-        Usuario usuario = UsuarioRepository.findByEmail(command.email())
+        Usuario usuario = usuarioRepository.findByEmail(command.email())
                 .orElseThrow(() -> new IllegalStateException("Usuário autenticado não encontrado."));
         String token = jwtService.generateToken(usuario);
         return new LoginResult(token, usuario);
