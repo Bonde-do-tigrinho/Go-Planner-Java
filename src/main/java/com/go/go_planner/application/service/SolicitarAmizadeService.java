@@ -48,11 +48,13 @@ public class SolicitarAmizadeService implements SolicitarAmizadeUseCase {
 
         String mensagem = solicitante.getNome() + " enviou-lhe um pedido de amizade.";
 
+        // --- ATUALIZAÇÃO AQUI ---
         Notificacao novaNotificacao = new Notificacao(
-                solicitado.getId(),
-                TipoNotificacao.SOLICITACAO_AMIZADE,
-                solicitacaoSalva.getId(),
-                mensagem
+                solicitado.getId(),                 // Destinatário
+                idUsuarioAtual,                     // Remetente (ADICIONADO)
+                TipoNotificacao.SOLICITACAO_AMIZADE, // Tipo
+                solicitacaoSalva.getId(),           // Referencia (ID da solicitação)
+                mensagem                            // Mensagem
         );
 
         notificacaoRepository.save(novaNotificacao);

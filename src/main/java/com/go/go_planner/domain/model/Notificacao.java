@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Document(collection = "notificacoes")
 public class Notificacao {
 
@@ -25,8 +26,9 @@ public class Notificacao {
     private TipoNotificacao tipo;
     private LocalDateTime dataCriacao = LocalDateTime.now();
 
-    public Notificacao(String destinatarioId, TipoNotificacao tipo, String referenciaId, String mensagem) {
+    public Notificacao(String destinatarioId, String remetenteId, TipoNotificacao tipo, String referenciaId, String mensagem) {
         this.destinatarioId = destinatarioId;
+        this.remetenteId = remetenteId;
         this.tipo = tipo;
         this.referenciaId = referenciaId;
         this.mensagem = mensagem;

@@ -1,9 +1,15 @@
 package com.go.go_planner.domain.model;
 
+import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Document(collection = "solicitacoes_viagem")
 public class SolicitacaoViagem {
 
     @Id
