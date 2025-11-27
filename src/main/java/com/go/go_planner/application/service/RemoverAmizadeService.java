@@ -4,7 +4,6 @@ import com.go.go_planner.application.port.in.RemoverAmizadeUseCase;
 import com.go.go_planner.application.port.out.UsuarioRepository;
 import com.go.go_planner.domain.model.Usuario;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

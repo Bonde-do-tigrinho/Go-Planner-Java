@@ -1,7 +1,6 @@
 package com.go.go_planner.infrastructure.config;
 
 import com.go.go_planner.application.port.out.UsuarioRepository;
-import com.go.go_planner.domain.model.Usuario;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
