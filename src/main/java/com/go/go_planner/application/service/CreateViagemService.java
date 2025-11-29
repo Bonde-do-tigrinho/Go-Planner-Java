@@ -82,7 +82,7 @@ public class CreateViagemService implements CreateViagemUseCase {
             SolicitacaoViagem solicitacao = new SolicitacaoViagem();
             solicitacao.setSolicitanteId(criadorId);
             solicitacao.setSolicitadoId(convidado.getId());
-            solicitacao.setIDviagem(viagem.getId());
+            solicitacao.setViagemId(viagem.getId());
             solicitacao.setStatus(StatusSolicitacao.PENDENTE);
             solicitacao.setDataCriacao(new Date());
 

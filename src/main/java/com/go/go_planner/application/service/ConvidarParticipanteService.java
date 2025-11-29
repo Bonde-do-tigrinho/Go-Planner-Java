@@ -43,7 +43,7 @@ public class ConvidarParticipanteService implements ConvidarParticipanteUseCase 
             throw new IllegalArgumentException("Este usuário já faz parte desta viagem.");
         }
 
-        boolean convitePendente = solicitacaoViagemRepository.existsBySolicitadoIdAndIDviagemAndStatus(
+        boolean convitePendente = solicitacaoViagemRepository.existsBySolicitadoIdAndViagemIdAndStatus(
                 convidado.getId(),
                 viagem.getId(),
                 StatusSolicitacao.PENDENTE
@@ -57,7 +57,7 @@ public class ConvidarParticipanteService implements ConvidarParticipanteUseCase 
         SolicitacaoViagem solicitacao = new SolicitacaoViagem();
         solicitacao.setSolicitanteId(command.criadorId());
         solicitacao.setSolicitadoId(convidado.getId());
-        solicitacao.setIDviagem(viagem.getId());
+        solicitacao.setViagemId(viagem.getId());
         solicitacao.setStatus(StatusSolicitacao.PENDENTE);
         solicitacao.setDataCriacao(new Date());
 

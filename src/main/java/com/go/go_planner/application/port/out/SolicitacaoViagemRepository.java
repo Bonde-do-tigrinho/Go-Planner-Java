@@ -7,5 +7,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SolicitacaoViagemRepository extends MongoRepository<SolicitacaoViagem, String> {
-    boolean existsBySolicitadoIdAndIDviagemAndStatus(String solicitadoId, String idViagem, StatusSolicitacao status);
-}
+    boolean existsBySolicitadoIdAndViagemIdAndStatus(String solicitadoId, String viagemId, StatusSolicitacao status);}
