@@ -22,7 +22,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/trips")
 @RequiredArgsConstructor
-public class ViagemController {
+public class    ViagemController {
 
     private final CreateViagemUseCase createViagemUseCase;
     private final GetViagemUseCase getViagemUseCase;
