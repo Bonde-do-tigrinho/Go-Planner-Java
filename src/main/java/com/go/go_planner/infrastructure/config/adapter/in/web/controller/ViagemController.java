@@ -37,6 +37,7 @@ public class    ViagemController {
     private final ConvidarParticipanteUseCase convidarParticipanteUseCase;
     private final UpdateParticipanteRoleUseCase updateParticipanteRoleUseCase;
     private final GetViagensParticipandoUseCase getViagensParticipandoUseCase;
+    private final GetParticipantesViagemUseCase getParticipantesViagemUseCase;
     private final ViagemDtoMapper viagemDtoMapper;
 
     @GetMapping("/{id}")
@@ -216,5 +217,16 @@ public class    ViagemController {
         List<Viagem> viagens = getViagensParticipandoUseCase.execute(principal.getId());
 
         return ResponseEntity.ok(viagens);
+    }
+
+    @GetMapping("/{viagemId}/participantes")
+    public ResponseEntity<List<ParticipanteResponseDTO>> getParticipantes(
+            @PathVariable String viagemId,
+            @AuthenticationPrincipal Usuario principal
+    ) {
+        List<ParticipanteResponseDTO> participantes = getParticipantesViagemUseCase
+                .execute(viagemId, principal.getId());
+
+        return ResponseEntity.ok(participantes);
     }
 }
