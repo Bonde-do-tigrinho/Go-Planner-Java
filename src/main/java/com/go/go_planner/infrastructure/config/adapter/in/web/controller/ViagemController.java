@@ -38,6 +38,8 @@ public class    ViagemController {
     private final UpdateParticipanteRoleUseCase updateParticipanteRoleUseCase;
     private final GetViagensParticipandoUseCase getViagensParticipandoUseCase;
     private final GetParticipantesViagemUseCase getParticipantesViagemUseCase;
+    private final AceitarConviteViagemUseCase aceitarConviteViagemUseCase;
+    private final RecusarConviteViagemUseCase recusarConviteViagemUseCase;
     private final ViagemDtoMapper viagemDtoMapper;
 
     @GetMapping("/{id}")
@@ -200,8 +202,8 @@ public class    ViagemController {
     ) {
         var command = new UpdateParticipanteRoleUseCase.UpdateRoleCommand(
                 viagemId,
-                principal.getId(), // ID de quem está logado (tem que ser o dono)
-                participanteId,    // ID de quem vai virar Editor/Leitor
+                principal.getId(),
+                participanteId,
                 request.role()
         );
 
@@ -228,5 +230,35 @@ public class    ViagemController {
                 .execute(viagemId, principal.getId());
 
         return ResponseEntity.ok(participantes);
+    }
+
+    @PostMapping("/convites/{solicitacaoId}/aceitar")
+    public ResponseEntity<Void> aceitarConvite(
+            @PathVariable String solicitacaoId,
+            @AuthenticationPrincipal Usuario principal
+    ) {
+        var command = new AceitarConviteViagemUseCase.AceitarConviteCommand(
+                solicitacaoId,
+                principal.getId()
+        );
+
+        aceitarConviteViagemUseCase.execute(command);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/convites/{solicitacaoId}/recusar")
+    public ResponseEntity<Void> recusarConvite(
+            @PathVariable String solicitacaoId,
+            @AuthenticationPrincipal Usuario principal
+    ) {
+        var command = new RecusarConviteViagemUseCase.RecusarConviteCommand(
+                solicitacaoId,
+                principal.getId()
+        );
+
+        recusarConviteViagemUseCase.execute(command);
+
+        return ResponseEntity.noContent().build();
     }
 }
