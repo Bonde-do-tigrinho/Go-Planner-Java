@@ -41,7 +41,7 @@ public class CreateViagemService implements CreateViagemUseCase {
         novaViagem.setCriadorViagemID(command.criadorId());
 
         novaViagem.getParticipantes().add(
-                new Viagem.Participante(command.criadorId(), ViagemRole.LEITOR)
+                new Viagem.Participante(command.criadorId(), ViagemRole.EDITOR)
         );
 
         if (command.atividades() != null && !command.atividades().isEmpty()) {
