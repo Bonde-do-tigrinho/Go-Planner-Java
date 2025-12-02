@@ -3,6 +3,7 @@ package com.go.go_planner.application.service;
 import com.go.go_planner.application.port.in.UpdateViagemUseCase;
 import com.go.go_planner.application.port.out.ViagemRepository;
 import com.go.go_planner.domain.model.Viagem;
+import com.go.go_planner.domain.model.ViagemRole; // <--- Importante!
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -22,8 +23,13 @@ public class UpdateViagemService implements UpdateViagemUseCase {
         Viagem viagemOriginal = viagemRepository.findById(command.viagemId())
                 .orElseThrow(() -> new NoSuchElementException("Viagem não encontrada: " + command.viagemId()));
 
-        if (!viagemOriginal.getCriadorViagemID().equals(command.userId())) {
-            throw new AccessDeniedException("Usuário não autorizado a modificar esta viagem.");
+        boolean isCriador = viagemOriginal.getCriadorViagemID().equals(command.userId());
+
+        boolean isEditor = viagemOriginal.getParticipantes().stream()
+                .anyMatch(p -> p.getUserId().equals(command.userId()) && p.getRole() == ViagemRole.EDITOR);
+
+        if (!isCriador && !isEditor) {
+            throw new AccessDeniedException("Você não tem permissão para editar esta viagem.");
         }
 
         Optional.ofNullable(command.titulo()).ifPresent(viagemOriginal::setTitulo);
@@ -42,7 +48,6 @@ public class UpdateViagemService implements UpdateViagemUseCase {
         viagemOriginal.setDataPartida(dataPartidaNova);
         viagemOriginal.setDataRetorno(dataRetornoNova);
 
-        // 5. Salvar a entidade atualizada
         return viagemRepository.save(viagemOriginal);
     }
 }
